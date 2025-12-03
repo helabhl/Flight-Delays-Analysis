@@ -23,97 +23,49 @@ jobs:
         with:
           r-version: '4.3.2'
 
-      - name: Install ALL required R packages
+      - name: Install R packages (HTML only)
         run: |
-          echo "📦 Installation des packages R..."
+          echo "📦 Installation des packages R pour HTML..."
           
-          # Packages ESSENTIELS pour Quarto
-          Rscript -e "install.packages(c('rmarkdown', 'knitr'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour le code linking (warning résolu)
-          Rscript -e "install.packages(c('downlit', 'xml2'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour VOS analyses (basés sur vos fichiers .qmd)
-          Rscript -e "install.packages(c('dplyr', 'ggplot2', 'readxl', 'tidyr', 'lubridate'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour les tests statistiques
-          Rscript -e "install.packages(c('car', 'lmtest', 'nortest', 'MASS'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages SPÉCIFIQUES dans vos fichiers
-          Rscript -e "install.packages(c('gplots'), repos = 'https://cloud.r-project.org')"  # <-- AJOUTÉ
-          
-          # Autres packages potentiellement nécessaires
-          Rscript -e "install.packages(c('RColorBrewer', 'gridExtra', 'scales'), repos = 'https://cloud.r-project.org')"
+          # MINIMUM pour HTML/WebR
+          Rscript -e "
+            pkgs <- c('rmarkdown', 'knitr', 'dplyr', 'ggplot2', 'gplots')
+            install.packages(pkgs, repos = 'https://cloud.r-project.org')
+          "
 
-      - name: Verify WebR extensions
+      - name: Install WebR extension
         run: |
-          echo "🔍 Vérification des extensions..."
           if [ ! -d "_extensions/coatless" ]; then
-            echo "📦 Installation de WebR extension..."
             quarto add coatless/webr --no-prompt
-          else
-            echo "✅ Extension WebR présente"
           fi
 
-      - name: Install system dependencies for gplots
+      - name: Install minimal system dependencies
         run: |
-          echo "📥 Installation des dépendances système pour gplots..."
-          sudo apt-get update
-          sudo apt-get install -y \
+          echo "📥 Dépendances système minimales..."
+          sudo apt-get update -q
+          sudo apt-get install -y --no-install-recommends \
             libcurl4-openssl-dev \
-            libssl-dev \
             libxml2-dev \
             libfontconfig1-dev \
-            libharfbuzz-dev \
-            libfribidi-dev \
             libfreetype6-dev \
-            libpng-dev \
-            libtiff5-dev \
-            libjpeg-dev \
-            libgmp-dev \
-            libmpfr-dev
+            libpng-dev
 
-      - name: Render Quarto website
+      - name: Render HTML website
         run: |
-          echo "🚀 Rendu du site Quarto..."
-          
-          # Nettoyer
+          echo "🚀 Rendu HTML seulement..."
           rm -rf docs/
           
-          # Option 1: Rendre tout
+          # FORCER HTML seulement
           quarto render --to html
           
-          # Option 2: Rendre fichier par fichier (plus de contrôle)
-          # quarto render index.qmd --to html
-          # for qmd in qmd/*.qmd; do
-          #   echo "📄 Rendu de $qmd"
-          #   quarto render "$qmd" --to html || echo "⚠️ Échec pour $qmd, continuation..."
-          # done
+          # Gérer index
+          [ -f "docs/index.qmd.html" ] && mv docs/index.qmd.html docs/index.html
+          [ ! -f "docs/index.html" ] && echo '<html><meta http-equiv="refresh" content="0;url=qmd/"></html>' > docs/index.html
           
-          # Gérer le fichier index
-          if [ -f "docs/index.qmd.html" ]; then
-            mv docs/index.qmd.html docs/index.html
-            echo "✅ index.qmd.html → index.html"
-          fi
-          
-          # S'assurer qu'il y a un index.html
-          if [ ! -f "docs/index.html" ]; then
-            echo '<!DOCTYPE html>
-            <html>
-            <head>
-              <title>Data Analysis Lab</title>
-              <meta http-equiv="refresh" content="0;url=qmd/">
-            </head>
-            <body>
-              <p>Redirecting to exercises...</p>
-            </body>
-            </html>' > docs/index.html
-          fi
-          
-          # Fichier obligatoire pour GitHub Pages
+          # GitHub Pages
           touch docs/.nojekyll
           
-          echo "✅ Rendu terminé"
+          echo "✅ Site HTML généré"
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
