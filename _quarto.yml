@@ -39,6 +39,14 @@ format:
     code-summary: "Show code"
     code-link: true
     code-overflow: scroll
+    pdf:
+      toc: true
+      number-sections: true
+      documentclass: article
+      papersize: a4
+      classoption: 
+        - twocolumn
+        - notitlepage
 
 # Configuration WebR (R seulement)
 webr:
@@ -58,3 +66,5 @@ kernel:
 
 bibliography: bib.bib
 csl: apa.csl
+
+latex-auto-install: true
