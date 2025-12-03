@@ -5,16 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# AJOUTER 'contents: read' et configurer correctement
 permissions:
-  contents: read  # <-- AJOUTER CETTE LIGNE
   pages: write
   id-token: write
-
-# AJOUTER la configuration de concurrence
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -37,7 +30,6 @@ jobs:
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3'
-          # Ceci configure automatiquement RSPM pour les binaires
           use-public-rspm: true
 
       - name: Cache R packages
@@ -73,49 +65,32 @@ jobs:
           cat > ~/.Rprofile << 'EOF'
           # Configuration GitHub Actions - RSPM pour binaires
           local({
-            # Détecter si nous sommes sur Ubuntu
             os <- Sys.info()[["sysname"]]
             if (os == "Linux") {
-              # Utiliser RSPM avec binaires pré-compilés
               options(repos = c(
                 RSPM = "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest",
                 CRAN = "https://cloud.r-project.org"
               ))
-              # Désactiver la compilation depuis source
               options(install.packages.compile.from.source = "never")
             } else {
               options(repos = c(CRAN = "https://cloud.r-project.org"))
             }
-            # Installation parallèle
             options(Ncpus = 4)
-            # Options d'installation
             options(INSTALL_opts = "--no-multiarch --no-docs --no-test-load")
           })
           EOF
           
-          # Vérifier la configuration
           echo "🔍 Configuration des dépôts R :"
           Rscript -e "getOption('repos')"
           
-          # Installation optimisée
           Rscript -e "
           start_time <- Sys.time()
-          
-          # Tous les packages en une seule commande (plus efficace)
-          all_pkgs <- c(
-            # Core Quarto/Rmarkdown
-            'rmarkdown', 'knitr', 'tinytex',
-            # Tidyverse (essentiels)
-            'dplyr', 'ggplot2', 'tidyr', 'readxl', 'lubridate',
-            # Stats
-            'car', 'lmtest', 'gplots',
-            # Utilitaires
-            'stringr', 'purrr', 'tibble', 'rlang'
-          )
+          all_pkgs <- c('rmarkdown', 'knitr', 'tinytex', 'dplyr', 'ggplot2', 
+                       'tidyr', 'readxl', 'lubridate', 'car', 'lmtest', 'gplots',
+                       'stringr', 'purrr', 'tibble', 'rlang')
           
           cat('📦 Installation de', length(all_pkgs), 'packages...\\n')
           
-          # Installer avec retry en cas d'échec
           install_with_retry <- function(pkgs, retries = 2) {
             for (i in 1:retries) {
               tryCatch({
@@ -133,27 +108,17 @@ jobs:
             }
           }
           
-          # Installer par groupes (plus stable)
           install_with_retry(c('rmarkdown', 'knitr'))
           install_with_retry(c('dplyr', 'ggplot2', 'tidyr'))
           install_with_retry(c('readxl', 'lubridate', 'stringr', 'purrr'))
           install_with_retry(c('car', 'lmtest', 'gplots'))
           
-          # Vérification finale
           cat('\\n✅ Vérification des installations...\\n')
           installed <- rownames(installed.packages())
           
           for (pkg in all_pkgs) {
-            if (pkg %in% installed) {
-              cat('✓', pkg, '\\n')
-            } else {
-              cat('✗', pkg, '(MANQUANT)\\n')
-              # Tentative individuelle pour les packages manquants
-              tryCatch({
-                install.packages(pkg, quiet = TRUE)
-                cat('  → Réinstallé\\n')
-              }, error = function(e) NULL)
-            }
+            if (pkg %in% installed) cat('✓', pkg, '\\n')
+            else cat('✗', pkg, '(MANQUANT)\\n')
           }
           
           end_time <- Sys.time()
@@ -181,17 +146,50 @@ jobs:
         run: |
           echo "🚀 Rendu du site web..."
           
-          # Option avec cache
+          # Nettoyer docs AVANT de rendre
+          rm -rf docs/
+          
+          # Rendu
           quarto render --cache
           
-          # Post-traitement
-          [ -f "docs/index.qmd.html" ] && mv docs/index.qmd.html docs/index.html
-          touch docs/.nojekyll
+          # Post-traitement CRITIQUE
+          if [ -f "docs/index.qmd.html" ]; then
+            mv docs/index.qmd.html docs/index.html
+            echo "✅ index.qmd.html renommé en index.html"
+          fi
           
           echo "✅ Génération terminée!"
 
-      - name: Setup Pages  # <-- AJOUTER CETTE ÉTAPE
-        uses: actions/configure-pages@v3
+      - name: Disable Jekyll for GitHub Pages
+        run: |
+          echo "🛑 DÉSACTIVATION DE JEKYLL..."
+          
+          # S'assurer que docs/ existe
+          mkdir -p docs
+          
+          # 1. Créer .nojekyll (méthode principale)
+          echo "Creating .nojekyll file..."
+          touch docs/.nojekyll
+          
+          # 2. Créer un fichier vide pour désactiver Jekyll complètement
+          echo "Creating empty .jekyll file..."
+          echo "" > docs/.jekyll 2>/dev/null || true
+          
+          # 3. Supprimer tout dossier _site qui pourrait exister
+          echo "Removing any _site directory..."
+          rm -rf docs/_site 2>/dev/null || true
+          
+          # 4. Supprimer tout fichier de configuration Jekyll
+          echo "Removing Jekyll config files..."
+          rm -f docs/_config.yml docs/Gemfile docs/Gemfile.lock 2>/dev/null || true
+          
+          # 5. Lister les fichiers pour vérification
+          echo "📁 Contenu de docs/:"
+          ls -la docs/
+          echo "🔍 Vérification .nojekyll:"
+          ls -la docs/.nojekyll || echo ".nojekyll non trouvé"
+          
+          echo "✅ Jekyll désactivé avec succès"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
