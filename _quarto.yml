@@ -7,8 +7,9 @@ project:
 
 website:
   title: "Elements of Data Analysis and Statistics - Lab Exercises"
-  site-url: "https://VOTRE-USERNAME.github.io/VOTRE-REPO/"
-  repo-url: "https://github.com/VOTRE-USERNAME/VOTRE-REPO"
+  site-url: "https://nevermind78.github.io/capstone_R/"
+  repo-url: "https://github.com/nevermind78/capstone_R"
+  
   repo-actions: [edit, issue]
   sidebar:
     style: "docked"
@@ -38,17 +39,8 @@ format:
     code-summary: "Show code"
     code-link: true
     code-overflow: scroll
-  #pdf:
-  #  toc: false
-  #  number-sections: true
-  #  colorlinks: true
-  #  papersize: a4
-  #  geometry:
-  #    - top=20mm
-  #    - left=25mm
-  #    - bottom=25mm
 
-# Configuration WebR
+# Configuration WebR (R seulement)
 webr:
   packages: ["dplyr", "ggplot2", "readxl", "tidyr", "lubridate", "car", "lmtest"]
 
@@ -58,6 +50,11 @@ execute:
   echo: false
   warning: false
   message: false
+  engine: r  # ← FORCER l'utilisation de R seulement
+
+# DÉSACTIVER Jupyter
+kernel:
+  jupyter: false
 
 bibliography: bib.bib
 csl: apa.csl

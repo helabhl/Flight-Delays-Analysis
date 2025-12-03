@@ -1,124 +1,59 @@
-name: Deploy Quarto Website
+project:
+  type: website
+  output-dir: docs
+  render: 
+    - "*.qmd"
+    - "qmd/*.qmd"
 
-on:
-  push:
-    branches: [main]
+website:
+  title: "Elements of Data Analysis and Statistics - Lab Exercises"
+  site-url: "https://VOTRE-USERNAME.github.io/VOTRE-REPO/"
+  repo-url: "https://github.com/VOTRE-USERNAME/VOTRE-REPO"
+  repo-actions: [edit, issue]
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: Projects
+        contents:
+          - qmd/01-pivot-tables-with-libreoffice.qmd
+          - qmd/03-discharge-elbe.qmd
+          - qmd/04-distributions-leaves.qmd
+          - qmd/05-distributions-fruits-tidyverse.qmd
+          - qmd/test_stat.qmd
+      - section: Presentations
+        contents:
+          - qmd/06-classical-tests.qmd
+      - section: other
+        contents:
+          - qmd/other.qmd
 
-permissions:
-  pages: write
-  id-token: write
+format:
+  html:
+    theme: light
+    css: thpe.css
+    toc: true
+    number-sections: true
+    code-fold: true
+    code-summary: "Show code"
+    code-link: true
+    code-overflow: scroll
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+# Configuration WebR (R seulement)
+webr:
+  packages: ["dplyr", "ggplot2", "readxl", "tidyr", "lubridate", "car", "lmtest"]
 
-      - name: Setup Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+execute:
+  freeze: auto
+  cache: true
+  echo: false
+  warning: false
+  message: false
+  engine: r  # ← FORCER l'utilisation de R seulement
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: '4.3.2'
+# DÉSACTIVER Jupyter
+kernel:
+  jupyter: false
 
-      - name: Install ALL required R packages
-        run: |
-          echo "📦 Installation des packages R..."
-          
-          # Packages ESSENTIELS pour Quarto
-          Rscript -e "install.packages(c('rmarkdown', 'knitr'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour le code linking (warning résolu)
-          Rscript -e "install.packages(c('downlit', 'xml2'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour VOS analyses (basés sur vos fichiers .qmd)
-          Rscript -e "install.packages(c('dplyr', 'ggplot2', 'readxl', 'tidyr', 'lubridate'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour les tests statistiques
-          Rscript -e "install.packages(c('car', 'lmtest', 'nortest', 'MASS'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages SPÉCIFIQUES dans vos fichiers
-          Rscript -e "install.packages(c('gplots'), repos = 'https://cloud.r-project.org')"  # <-- AJOUTÉ
-          
-          # Autres packages potentiellement nécessaires
-          Rscript -e "install.packages(c('RColorBrewer', 'gridExtra', 'scales'), repos = 'https://cloud.r-project.org')"
-
-      - name: Verify WebR extensions
-        run: |
-          echo "🔍 Vérification des extensions..."
-          if [ ! -d "_extensions/coatless" ]; then
-            echo "📦 Installation de WebR extension..."
-            quarto add coatless/webr --no-prompt
-          else
-            echo "✅ Extension WebR présente"
-          fi
-
-      - name: Install system dependencies for gplots
-        run: |
-          echo "📥 Installation des dépendances système pour gplots..."
-          sudo apt-get update
-          sudo apt-get install -y \
-            libcurl4-openssl-dev \
-            libssl-dev \
-            libxml2-dev \
-            libfontconfig1-dev \
-            libharfbuzz-dev \
-            libfribidi-dev \
-            libfreetype6-dev \
-            libpng-dev \
-            libtiff5-dev \
-            libjpeg-dev \
-            libgmp-dev \
-            libmpfr-dev
-
-      - name: Render Quarto website
-        run: |
-          echo "🚀 Rendu du site Quarto..."
-          
-          # Nettoyer
-          rm -rf docs/
-          
-          # Option 1: Rendre tout
-          quarto render --to html
-          
-          # Option 2: Rendre fichier par fichier (plus de contrôle)
-          # quarto render index.qmd --to html
-          # for qmd in qmd/*.qmd; do
-          #   echo "📄 Rendu de $qmd"
-          #   quarto render "$qmd" --to html || echo "⚠️ Échec pour $qmd, continuation..."
-          # done
-          
-          # Gérer le fichier index
-          if [ -f "docs/index.qmd.html" ]; then
-            mv docs/index.qmd.html docs/index.html
-            echo "✅ index.qmd.html → index.html"
-          fi
-          
-          # S'assurer qu'il y a un index.html
-          if [ ! -f "docs/index.html" ]; then
-            echo '<!DOCTYPE html>
-            <html>
-            <head>
-              <title>Data Analysis Lab</title>
-              <meta http-equiv="refresh" content="0;url=qmd/">
-            </head>
-            <body>
-              <p>Redirecting to exercises...</p>
-            </body>
-            </html>' > docs/index.html
-          fi
-          
-          # Fichier obligatoire pour GitHub Pages
-          touch docs/.nojekyll
-          
-          echo "✅ Rendu terminé"
-
-      - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs/
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v3
+bibliography: bib.bib
+csl: apa.csl
