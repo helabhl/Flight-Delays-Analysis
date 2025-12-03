@@ -3,6 +3,7 @@ name: Deploy Quarto Site
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   pages: write
@@ -18,83 +19,108 @@ jobs:
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Setup Python and Jupyter
-        run: |
-          echo "🐍 Installation de Python et Jupyter..."
-          
-          # Mettre à jour pip
-          python3 -m pip install --upgrade pip
-          
-          # Installer Jupyter et ses dépendances
-          python3 -m pip install jupyter nbformat ipykernel ipywidgets
-          
-          # Installer les packages Python communs pour l'analyse de données
-          python3 -m pip install pandas numpy matplotlib seaborn scipy
-          
-          # Vérifier l'installation
-          python3 -c "import jupyter; import nbformat; print('✅ Jupyter et nbformat installés')"
+      - name: Setup Python with cache
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: Setup R
+      - name: Install Python packages with cache
+        run: |
+          # Installer jupyter-cache et dépendances
+          python -m pip install jupyter-cache nbformat jupyter
+          
+          # Vérifier
+          python -c "import jupyter_cache; print(f'jupyter-cache: {jupyter_cache.__version__}')"
+
+      - name: Setup R with cache
         uses: r-lib/actions/setup-r@v2
         with:
           r-version: '4.3.2'
+          cache: 'packrat'  # ou 'renv'
 
-      - name: Install R packages
-        run: |
-          echo "📦 Installation des packages R..."
-          
-          # Packages essentiels pour Quarto
-          Rscript -e "install.packages(c('rmarkdown', 'knitr'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour WebR et analyses
-          Rscript -e "install.packages(c('dplyr', 'ggplot2', 'readxl', 'tidyr', 'lubridate', 'gplots'), repos = 'https://cloud.r-project.org')"
-          
-          # Packages pour les tests statistiques
-          Rscript -e "install.packages(c('car', 'lmtest', 'nortest', 'MASS'), repos = 'https://cloud.r-project.org')"
-          
-          # Vérification
-          Rscript -e "cat('✅ Packages R installés\\n')"
+      - name: Cache R packages (CRITIQUE pour la vitesse)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/R
+            /usr/local/lib/R/site-library
+            /opt/R/4.3.2/lib/R/library
+            ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-packages-${{ hashFiles('**/*.qmd', '**/_quarto.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-r-packages-
 
-      - name: Install WebR extension
+      - name: Cache Quarto dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/quarto
+            ~/.local/share/quarto
+            _extensions
+          key: ${{ runner.os }}-quarto-${{ hashFiles('_quarto.yml', '**/*.qmd') }}
+          restore-keys: |
+            ${{ runner.os }}-quarto-
+
+      - name: Install ONLY missing R packages
         run: |
+          echo "📦 Installation intelligente des packages R..."
+          
+          # Script R pour n'installer que les packages manquants
+          Rscript -e "
+            # Liste des packages requis
+            required <- c(
+              'rmarkdown', 'knitr', 'jupyter',
+              'dplyr', 'ggplot2', 'readxl', 'tidyr', 'lubridate',
+              'gplots', 'car', 'lmtest', 'nortest', 'MASS',
+              'RColorBrewer', 'gridExtra', 'scales'
+            )
+            
+            # Vérifier ce qui est déjà installé
+            installed <- installed.packages()[, 'Package']
+            missing <- setdiff(required, installed)
+            
+            if (length(missing) > 0) {
+              cat('Installing', length(missing), 'missing packages:', paste(missing, collapse = ', '), '\\n')
+              install.packages(missing, repos = 'https://cloud.r-project.org', quiet = TRUE)
+            } else {
+              cat('✅ All packages already installed\\n')
+            }
+            
+            # Vérifier jupyter-cache spécifiquement
+            if (!requireNamespace('jupyter', quietly = TRUE)) {
+              cat('Installing jupyter package...\\n')
+              install.packages('jupyter', repos = 'https://cloud.r-project.org')
+            }
+          "
+
+      - name: Install WebR extension (cached)
+        run: |
+          # Vérifier si l'extension existe déjà
           if [ ! -d "_extensions/coatless" ]; then
             quarto add coatless/webr --no-prompt
+          else
+            echo "✅ WebR extension already installed"
           fi
 
-      - name: Render Quarto website
+      - name: Render site with cached execution
         run: |
-          echo "🚀 Rendu du site Quarto..."
+          echo "🚀 Rendu avec cache..."
           
-          # Nettoyer
-          rm -rf docs/
-          
-          # Rendre tout le site
-          quarto render --to html
-          
-          # Gérer le fichier index
-          if [ -f "docs/index.qmd.html" ]; then
-            mv docs/index.qmd.html docs/index.html
-            echo "✅ index.qmd.html → index.html"
+          # Nettoyer seulement si nécessaire
+          if [ "${{ github.event_name }}" = "push" ]; then
+            rm -rf docs/
           fi
           
-          # S'assurer qu'il y a un index.html
-          if [ ! -f "docs/index.html" ]; then
-            echo '<!DOCTYPE html>
-            <html>
-            <head>
-              <title>Data Analysis Lab</title>
-              <meta http-equiv="refresh" content="0;url=qmd/">
-            </head>
-            <body>
-              <p>Redirecting to exercises...</p>
-            </body>
-            </html>' > docs/index.html
-          fi
+          # Rendre avec utilisation du cache
+          quarto render --cache --to html
           
-          # Fichier obligatoire pour GitHub Pages
+          # Gérer index.html
+          [ -f "docs/index.qmd.html" ] && mv docs/index.qmd.html docs/index.html
+          [ ! -f "docs/index.html" ] && echo '<html><meta http-equiv="refresh" content="0;url=qmd/"></html>' > docs/index.html
+          
+          # GitHub Pages requirement
           touch docs/.nojekyll
-          
-          echo "✅ Rendu terminé"
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
