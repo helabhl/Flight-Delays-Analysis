@@ -29,50 +29,47 @@ jobs:
     - name: Setup Quarto
       uses: quarto-dev/quarto-actions/setup@v2
     
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    
     - name: Setup R
       uses: r-lib/actions/setup-r@v2
       with:
         r-version: '4.3.2'
     
-    - name: Cache Quarto dependencies
+    - name: Setup TinyTeX
+      uses: r-lib/actions/setup-tinytex@v2
+      with:
+        version: '2024.03'
+    
+    - name: Cache dependencies
       uses: actions/cache@v4
       with:
         path: |
           ~/.cache/quarto
           ~/.local/share/quarto
-        key: ${{ runner.os }}-quarto-${{ hashFiles('**/_quarto.yml', '**/*.qmd') }}
+          ~/TinyTeX
+          ${{ env.R_LIBS_USER }}
+        key: ${{ runner.os }}-cache-${{ hashFiles('**/_quarto.yml', '**/*.qmd', '**/*.R') }}
         restore-keys: |
-          ${{ runner.os }}-quarto-
+          ${{ runner.os }}-cache-
     
-    - name: Cache R packages
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.R_LIBS_USER }}
-        key: ${{ runner.os }}-r-${{ hashFiles('**/*.R', '**/_quarto.yml') }}
-        restore-keys: |
-          ${{ runner.os }}-r-
-    
-    - name: Verify WebR extensions
+    - name: Verify and install WebR extensions
       run: |
-        echo "Vérification des extensions..."
-        if [ -d "_extensions/coatless" ]; then
-          echo "✅ Extension coatless (WebR) trouvée"
-        else
-          echo "⚠️ Extension coatless manquante, tentative d'installation..."
+        echo "🔍 Vérification des extensions WebR..."
+        
+        # Vérifier si l'extension WebR existe
+        if [ ! -d "_extensions/coatless" ]; then
+          echo "📦 Installation de l'extension WebR..."
           quarto add coatless/webr --no-prompt
+        else
+          echo "✅ Extension WebR déjà installée"
         fi
         
-        if [ -d "_extensions/r-wasm" ]; then
-          echo "✅ Extension r-wasm trouvée"
-        fi
+        # Mettre à jour les extensions
+        echo "🔄 Mise à jour des extensions..."
+        quarto add --no-prompt
     
     - name: Install system dependencies
       run: |
+        echo "📥 Installation des dépendances système..."
         sudo apt-get update
         sudo apt-get install -y \
           libcurl4-openssl-dev \
@@ -85,54 +82,84 @@ jobs:
           libpng-dev \
           libtiff5-dev \
           libjpeg-dev \
-          libicu-dev
-    
-    - name: Install TinyTeX
-      uses: r-lib/actions/setup-tinytex@v2
+          libicu-dev \
+          ghostscript \
+          qpdf
     
     - name: Install R packages
       run: |
-        Rscript -e "install.packages(c('rmarkdown', 'knitr', 'ggplot2', 'dplyr', 'tidyr'), repos = 'https://cloud.r-project.org')"
-        Rscript -e "tinytex::install_tinytex()"
+        echo "📦 Installation des packages R..."
+        
+        # Packages de base pour Quarto/R Markdown
+        Rscript -e "install.packages(c('rmarkdown', 'knitr'), repos = 'https://cloud.r-project.org')"
+        
+        # Packages pour vos analyses
+        Rscript -e "install.packages(c('dplyr', 'ggplot2', 'tidyr', 'readxl', 'lubridate'), repos = 'https://cloud.r-project.org')"
+        
+        # Packages pour les tests statistiques
+        Rscript -e "install.packages(c('car', 'lmtest', 'nortest', 'MASS'), repos = 'https://cloud.r-project.org')"
+        
+        # Vérifier que TinyTeX est bien installé
+        Rscript -e "if(!requireNamespace('tinytex', quietly = TRUE)) install.packages('tinytex', repos = 'https://cloud.r-project.org')"
+        Rscript -e "tinytex::tlmgr_install(c('geometry', 'hyperref', 'microtype', 'fancyhdr', 'sectsty'))"
     
     - name: Render Quarto website
       run: |
-        echo "🚀 Rendu du site Quarto..."
+        echo "🚀 Démarrage du rendu Quarto..."
+        
+        # Vérifier la configuration Quarto
+        echo "⚙️ Configuration Quarto :"
+        quarto check
+        
+        # Rendre le site
+        echo "📄 Rendu du site..."
         quarto render --to html
         
-        echo "📁 Vérification du dossier docs/"
-        if [ -d "docs" ]; then
-          echo "✅ docs/ créé avec succès"
-          echo "📄 Fichiers générés :"
-          find docs -name "*.html" | wc -l
-        else
-          echo "❌ ERREUR : docs/ non créé"
-          exit 1
-        fi
+        # Vérifier les résultats
+        echo "✅ Rendu terminé"
+        echo "📁 Contenu du dossier docs/:"
+        ls -la docs/
+        
+        # Compter les fichiers HTML générés
+        html_count=$(find docs -name "*.html" | wc -l)
+        echo "📊 $html_count fichiers HTML générés"
     
-    - name: Add GitHub Pages required files
+    - name: Prepare for GitHub Pages
       run: |
-        # .nojekyll est obligatoire
+        echo "🔧 Préparation pour GitHub Pages..."
+        
+        # Fichier .nojekyll obligatoire
         touch docs/.nojekyll
+        echo "✅ .nojekyll créé"
         
-        # Copier README si présent
-        if [ -f "README.md" ]; then
-          cp README.md docs/
+        # S'assurer qu'il y a un index.html
+        if [ ! -f "docs/index.html" ]; then
+          if [ -f "docs/index.qmd.html" ]; then
+            mv docs/index.qmd.html docs/index.html
+            echo "✅ index.html créé à partir de index.qmd.html"
+          else
+            # Créer un index minimal
+            echo '<!DOCTYPE html><html><head><title>Site Quarto</title><meta http-equiv="refresh" content="0; url=./qmd/"></head><body>Redirection...</body></html>' > docs/index.html
+            echo "⚠️ index.html minimal créé"
+          fi
         fi
         
-        # Vérifier qu'il y a un index.html
-        if [ ! -f "docs/index.html" ] && [ -f "docs/index.qmd.html" ]; then
-          mv docs/index.qmd.html docs/index.html
-        fi
+        # Copier les fichiers essentiels
+        for file in README.md LICENSE .gitignore; do
+          if [ -f "$file" ]; then
+            cp "$file" docs/
+            echo "✅ $file copié dans docs/"
+          fi
+        done
     
     - name: Setup Pages
       uses: actions/configure-pages@v3
     
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3  # Version mise à jour
+      uses: actions/upload-pages-artifact@v3
       with:
         path: ./docs
     
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v3  # Version mise à jour
+      uses: actions/deploy-pages@v3
