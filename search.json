@@ -1,0 +1,536 @@
+[
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "",
+    "text": "Beyond aggregate statistics, understanding flight delays requires analyzing their temporal evolution and interdependencies. This section focuses on:\n\nMonthly dynamics of delay causes\nCorrelations between delay types\nFine-grained temporal patterns\nExtreme delays and their propagation mechanisms\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#introduction",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#introduction",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "",
+    "text": "Beyond aggregate statistics, understanding flight delays requires analyzing their temporal evolution and interdependencies. This section focuses on:\n\nMonthly dynamics of delay causes\nCorrelations between delay types\nFine-grained temporal patterns\nExtreme delays and their propagation mechanisms\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#monthly-evolution-of-delay-causes",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#monthly-evolution-of-delay-causes",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "2 Monthly Evolution of Delay Causes",
+    "text": "2 Monthly Evolution of Delay Causes\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDelay causes do not evolve uniformly over time. Some exhibit strong seasonal variability, highlighting differentiated temporal mechanisms.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#correlation-analysis-between-delay-causes-spearman",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#correlation-analysis-between-delay-causes-spearman",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "3 Correlation Analysis Between Delay Causes (Spearman)",
+    "text": "3 Correlation Analysis Between Delay Causes (Spearman)\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nCarrier-related delays are strongly correlated with late-aircraft delays, suggesting operational propagation effects within airline schedules.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#fine-grained-temporal-analysis",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#fine-grained-temporal-analysis",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "4 Fine-Grained Temporal Analysis",
+    "text": "4 Fine-Grained Temporal Analysis\n\n4.1 Daily Time Series of Late Aircraft Delays\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nPronounced temporal peaks suggest episodes of systemic disruption rather than isolated events.\n\n\n4.2 Daily Zoom: January Case Study\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDaily analysis reveals short but intense disruption episodes, invisible at monthly scale.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#extreme-delays-outliers-and-temporal-accumulation",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#extreme-delays-outliers-and-temporal-accumulation",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "5 Extreme Delays (Outliers) and Temporal Accumulation",
+    "text": "5 Extreme Delays (Outliers) and Temporal Accumulation\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#correlation-of-extreme-delay-events",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#correlation-of-extreme-delay-events",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "6 Correlation of Extreme Delay Events",
+    "text": "6 Correlation of Extreme Delay Events\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterpretation and Operational Insights Propagation of internal delays Outliers associated with late_aircraft_delay and carrier_delay frequently occur together, highlighting cascading effects within airline operations.\nExogenous disruptions Weather, NAS, and security-related outliers appear isolated and weakly correlated, confirming their exceptional and largely independent nature.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/04_temporal_dynamics_and_propagation.html#conclusion",
+    "href": "qmd/04_temporal_dynamics_and_propagation.html#conclusion",
+    "title": "Flight Delays Analysis – Temporal Dynamics and Propagation Effects",
+    "section": "7 Conclusion",
+    "text": "7 Conclusion\nThis temporal analysis demonstrates that flight delays are not random events but exhibit:\n\nStrong temporal clustering\nClear propagation mechanisms\nDistinct behaviors between internal and external causes\n\nThese insights are essential for robust delay mitigation strategies and pave the way for predictive or causal modeling approaches.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html",
+    "href": "qmd/02_descriptive_analysis_delays.html",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "",
+    "text": "This section provides a descriptive overview of flight delays, focusing on cancellation rates, delay severity, and distributional properties of arrival delays. The objective is to quantify the magnitude of delays and identify structural characteristics such as asymmetry and extreme values.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#introduction",
+    "href": "qmd/02_descriptive_analysis_delays.html#introduction",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "",
+    "text": "This section provides a descriptive overview of flight delays, focusing on cancellation rates, delay severity, and distributional properties of arrival delays. The objective is to quantify the magnitude of delays and identify structural characteristics such as asymmetry and extreme values.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#proportions-of-cancelled-and-diverted-flights",
+    "href": "qmd/02_descriptive_analysis_delays.html#proportions-of-cancelled-and-diverted-flights",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "2 Proportions of Cancelled and Diverted Flights",
+    "text": "2 Proportions of Cancelled and Diverted Flights\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nCancelled and diverted flights are excluded from the analysis, as they do not provide an exploitable arrival delay measure.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#removal-of-non-exploitable-flights",
+    "href": "qmd/02_descriptive_analysis_delays.html#removal-of-non-exploitable-flights",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "3 Removal of Non-Exploitable Flights",
+    "text": "3 Removal of Non-Exploitable Flights\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#flights-with-positive-arrival-delay",
+    "href": "qmd/02_descriptive_analysis_delays.html#flights-with-positive-arrival-delay",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "4 Flights with Positive Arrival Delay",
+    "text": "4 Flights with Positive Arrival Delay\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nA significant proportion of flights arrive late, confirming the relevance of the phenomenon under study.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#significant-delays-15-minutes",
+    "href": "qmd/02_descriptive_analysis_delays.html#significant-delays-15-minutes",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "5 Significant Delays (> 15 minutes)",
+    "text": "5 Significant Delays (&gt; 15 minutes)\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#severity-of-delays-among-delayed-flights",
+    "href": "qmd/02_descriptive_analysis_delays.html#severity-of-delays-among-delayed-flights",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "6 Severity of Delays Among Delayed Flights",
+    "text": "6 Severity of Delays Among Delayed Flights\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nA substantial share of delayed flights exceeds the 15-minute operational threshold, commonly used as a regulatory reference.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#distribution-of-arrival-delays",
+    "href": "qmd/02_descriptive_analysis_delays.html#distribution-of-arrival-delays",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "7 Distribution of Arrival Delays",
+    "text": "7 Distribution of Arrival Delays\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nThe distribution is strongly right-skewed with numerous outliers, justifying the use of robust statistics and non-parametric tests.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#summary-statistics",
+    "href": "qmd/02_descriptive_analysis_delays.html#summary-statistics",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "8 Summary Statistics",
+    "text": "8 Summary Statistics\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nThe marked difference between the negative median and positive mean highlights the influence of extreme delays. While the median reflects punctuality, the mean is driven upward by rare but severe events.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#early-departures",
+    "href": "qmd/02_descriptive_analysis_delays.html#early-departures",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "9 Early Departures",
+    "text": "9 Early Departures\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nEarly departures may reflect operational strategies aimed at absorbing anticipated delays or systematic overestimation of taxi times.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "qmd/02_descriptive_analysis_delays.html#conclusion",
+    "href": "qmd/02_descriptive_analysis_delays.html#conclusion",
+    "title": "Flight Delays Analysis – Descriptive Statistics and Delay Severity",
+    "section": "10 Conclusion",
+    "text": "10 Conclusion\nThis descriptive analysis reveals that flight delays are characterized by:\n\nStrong asymmetry and heavy tails\nA non-negligible proportion of severe delays\nThe presence of extreme events driving average performance\nThese findings motivate further investigation into causal factors and temporal patterns.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Analysis of Flight Delays (2024)",
+    "section": "",
+    "text": "Flight delays represent a major challenge for air transportation systems, affecting passengers, airlines, and airport operations. This project aims to analyze flight delays in 2024, identify key influencing factors, and extract actionable insights using statistical analysis and data visualization."
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Analysis of Flight Delays (2024)",
+    "section": "",
+    "text": "Flight delays represent a major challenge for air transportation systems, affecting passengers, airlines, and airport operations. This project aims to analyze flight delays in 2024, identify key influencing factors, and extract actionable insights using statistical analysis and data visualization."
+  },
+  {
+    "objectID": "index.html#related-pages",
+    "href": "index.html#related-pages",
+    "title": "Analysis of Flight Delays (2024)",
+    "section": "2 Related Pages",
+    "text": "2 Related Pages\n\nLecture slides\nDatasets\nSource code  github"
+  },
+  {
+    "objectID": "index.html#author",
+    "href": "index.html#author",
+    "title": "Analysis of Flight Delays (2024)",
+    "section": "3 Author",
+    "text": "3 Author\nHela Bouhlel"
+  },
+  {
+    "objectID": "qmd/01_data_loading_cleaning.html",
+    "href": "qmd/01_data_loading_cleaning.html",
+    "title": "Flight Delays Analysis – Data Loading and Cleaning",
+    "section": "",
+    "text": "Reliable analysis of flight delays requires clean, consistent, and well-understood data. Before performing any aggregation or modeling, it is essential to inspect the dataset structure and address potential data quality issues such as missing values and duplicated records.\nScientific aim: Prepare the flight delay dataset for exploratory and statistical analysis by ensuring data integrity and consistency.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Data Loading and Cleaning"
+    ]
+  },
+  {
+    "objectID": "qmd/01_data_loading_cleaning.html#introduction",
+    "href": "qmd/01_data_loading_cleaning.html#introduction",
+    "title": "Flight Delays Analysis – Data Loading and Cleaning",
+    "section": "",
+    "text": "Reliable analysis of flight delays requires clean, consistent, and well-understood data. Before performing any aggregation or modeling, it is essential to inspect the dataset structure and address potential data quality issues such as missing values and duplicated records.\nScientific aim: Prepare the flight delay dataset for exploratory and statistical analysis by ensuring data integrity and consistency.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Data Loading and Cleaning"
+    ]
+  },
+  {
+    "objectID": "qmd/01_data_loading_cleaning.html#package-loading-and-data-import",
+    "href": "qmd/01_data_loading_cleaning.html#package-loading-and-data-import",
+    "title": "Flight Delays Analysis – Data Loading and Cleaning",
+    "section": "2 Package Loading and Data Import",
+    "text": "2 Package Loading and Data Import\n\n2.1 Required libraries\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n2.2 Data import from Google Drive\nThe dataset is stored remotely on Google Drive and imported directly using a shared access link.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Data Loading and Cleaning"
+    ]
+  },
+  {
+    "objectID": "qmd/01_data_loading_cleaning.html#initial-data-inspection",
+    "href": "qmd/01_data_loading_cleaning.html#initial-data-inspection",
+    "title": "Flight Delays Analysis – Data Loading and Cleaning",
+    "section": "3 Initial Data Inspection",
+    "text": "3 Initial Data Inspection\n\n3.1 Preview of the dataset\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n3.2 Structure and variable overview\nThe glimpse() function provides a concise summary of variable types and overall dataset structure.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\n\n3.3 Description of Dataset Variables\n\n\n\n\n\n\n\nColumn Name\nDescription\n\n\n\n\nyear\nYear of the flight\n\n\nmonth\nMonth of the flight (1–12)\n\n\nday_of_month\nDay of the month\n\n\nday_of_week\nDay of the week (1 = Monday, 7 = Sunday)\n\n\nfl_date\nFlight date\n\n\nop_unique_carrier\nUnique airline carrier code\n\n\nop_carrier_fl_num\nFlight number\n\n\norigin\nDeparture airport code\n\n\norigin_city_name\nDeparture city\n\n\norigin_state_nm\nDeparture state\n\n\ndest\nArrival airport code\n\n\ndest_city_name\nArrival city\n\n\ndest_state_nm\nArrival state\n\n\ncrs_dep_time\nScheduled departure time\n\n\ndep_time\nActual departure time\n\n\ndep_delay\nDeparture delay (minutes)\n\n\ntaxi_out\nTaxi-out time (minutes)\n\n\nwheels_off\nTime when aircraft leaves the ground\n\n\nwheels_on\nTime when aircraft lands\n\n\ntaxi_in\nTaxi-in time (minutes)\n\n\narr_delay\nArrival delay (minutes)\n\n\ncarrier_delay\nDelay caused by the airline\n\n\nweather_delay\nDelay due to weather conditions\n\n\nnas_delay\nDelay caused by air traffic system\n\n\nsecurity_delay\nDelay due to security issues\n\n\nlate_aircraft_delay\nDelay due to late arrival of previous aircraft\n\n\ncancelled\nCancellation indicator (1 = cancelled, 0 = not cancelled)\n\n\ndiverted\nDiversion indicator (1 = diverted, 0 = not diverted)",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Data Loading and Cleaning"
+    ]
+  },
+  {
+    "objectID": "qmd/01_data_loading_cleaning.html#data-cleaning",
+    "href": "qmd/01_data_loading_cleaning.html#data-cleaning",
+    "title": "Flight Delays Analysis – Data Loading and Cleaning",
+    "section": "4 Data Cleaning",
+    "text": "4 Data Cleaning\n\n4.1 Missing values analysis\nBefore deciding on imputation or filtering strategies, the number of missing values per variable is computed.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterpretation: This step allows identification of variables that may require special treatment during subsequent analyses.\n\n\n4.2 Removal of duplicated rows\nDuplicated observations can bias statistical results and must be removed.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Data Loading and Cleaning"
+    ]
+  },
+  {
+    "objectID": "qmd/01_data_loading_cleaning.html#conclusion",
+    "href": "qmd/01_data_loading_cleaning.html#conclusion",
+    "title": "Flight Delays Analysis – Data Loading and Cleaning",
+    "section": "5 Conclusion",
+    "text": "5 Conclusion\nThis first preprocessing phase ensures that the dataset:\n\nIs correctly imported and readable\nHas a clearly identified structure\nIs free from duplicated records\nHas documented missing values\n\nThese steps form a robust foundation for further exploratory analysis, aggregation of delays, and modeling of contributing factors.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Data Loading and Cleaning"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html",
+    "href": "qmd/03_causes_and_seasonality.html",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "",
+    "text": "This section investigates the underlying causes of delays and their temporal variability. The objective is to identify dominant delay drivers and assess whether delays exhibit seasonal patterns.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#introduction",
+    "href": "qmd/03_causes_and_seasonality.html#introduction",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "",
+    "text": "This section investigates the underlying causes of delays and their temporal variability. The objective is to identify dominant delay drivers and assess whether delays exhibit seasonal patterns.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#total-delay-minutes-by-cause",
+    "href": "qmd/03_causes_and_seasonality.html#total-delay-minutes-by-cause",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "2 Total Delay Minutes by Cause",
+    "text": "2 Total Delay Minutes by Cause\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nAirline-related and late-aircraft delays account for the largest share of cumulative delay minutes, suggesting a strong propagation effect within the air transport system.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#visualization-of-delay-causes",
+    "href": "qmd/03_causes_and_seasonality.html#visualization-of-delay-causes",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "3 Visualization of Delay Causes",
+    "text": "3 Visualization of Delay Causes\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInternal and operational causes dominate exogenous factors such as weather or security.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#internal-vs-external-delay-sources",
+    "href": "qmd/03_causes_and_seasonality.html#internal-vs-external-delay-sources",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "4 Internal vs External Delay Sources",
+    "text": "4 Internal vs External Delay Sources\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nWhile external factors contribute significantly, internal causes remain a major lever for performance improvement by airlines.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#monthly-flight-volume",
+    "href": "qmd/03_causes_and_seasonality.html#monthly-flight-volume",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "5 Monthly Flight Volume",
+    "text": "5 Monthly Flight Volume\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nFlight volume varies across months, reflecting seasonal traffic patterns: * The data suggests a summer peak (July) and a fall increase (October).\n\nEarly months (Jan–Feb) have fewer flights, possibly due to post-holiday slowdown.\nLate months (Nov–Dec) show slightly lower numbers, possibly before the holiday surge.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#monthly-distribution-of-delay-categories",
+    "href": "qmd/03_causes_and_seasonality.html#monthly-distribution-of-delay-categories",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "6 Monthly Distribution of Delay Categories",
+    "text": "6 Monthly Distribution of Delay Categories\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#monthly-proportions-independent-of-traffic-volume",
+    "href": "qmd/03_causes_and_seasonality.html#monthly-proportions-independent-of-traffic-volume",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "7 Monthly Proportions Independent of Traffic Volume",
+    "text": "7 Monthly Proportions Independent of Traffic Volume\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDelay intensity varies substantially across months, combining both frequency and severity effects.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#effect-of-month-on-flight-delays-kruskalwallis-test",
+    "href": "qmd/03_causes_and_seasonality.html#effect-of-month-on-flight-delays-kruskalwallis-test",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "8 Effect of Month on Flight Delays (Kruskal–Wallis Test)",
+    "text": "8 Effect of Month on Flight Delays (Kruskal–Wallis Test)\nResearch Question : Do arrival delays significantly differ across months of the year?\nStatistical Hypotheses\n\nH₀ (Null hypothesis) The distribution of arrival delays (arr_delay) is identical across all months. → There is no seasonal effect on flight delays.\nH₁ (Alternative hypothesis) At least one month has a different delay distribution. → There is a significant seasonal effect on flight delays.\n\nStatistical Test\nA Kruskal–Wallis rank-sum test was applied because:\n\narrival delays are non-normally distributed\nextreme values (outliers) are present\nmore than two independent groups (12 months) are compared\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDecision: Reject the null hypothesis (H₀).\nConclusion: Arrival delay distributions differ significantly across months, confirming the presence of a strong seasonal effect.\nThis seasonal variability may be explained by:\n\nincreased demand during summer and holiday periods\nadverse weather conditions during winter months",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#flight-volume-vs-delay-severity-spearman-correlation",
+    "href": "qmd/03_causes_and_seasonality.html#flight-volume-vs-delay-severity-spearman-correlation",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "9 Flight Volume vs Delay Severity (Spearman Correlation)",
+    "text": "9 Flight Volume vs Delay Severity (Spearman Correlation)\nResearch Question\nDo days with higher flight volumes experience more severe arrival delays?\nStatistical Hypotheses\nH₀ (Null hypothesis) There is no association between daily flight volume and arrival delay severity.\nH₁ (Alternative hypothesis) Daily flight volume is associated with arrival delay severity.\nStatistical Test\nMonthly aggregates were computed and analyzed using Spearman’s rank correlation, which:\n\ndoes not assume linearity\nis robust to non-normal distributions\nmeasures monotonic relationships\n\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nInterpretation The results show a statistically significant positive correlation (ρ = 0.21, p &lt; 0.001), indicating that days with higher traffic volumes tend to experience longer arrival delays.\nDecision: Reject the null hypothesis (H₀).\nConclusion:\nDays with higher traffic tend to experience longer arrival delays,\nbut the effect remains moderate and highly variable.\nIn other words:\n\nTraffic contributes to delays\nIt is not the dominant factor",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/03_causes_and_seasonality.html#general-conclusion",
+    "href": "qmd/03_causes_and_seasonality.html#general-conclusion",
+    "title": "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors",
+    "section": "10 General Conclusion",
+    "text": "10 General Conclusion\nThis section demonstrates that:\n\nDelay causes are predominantly internal and operational\nDelays exhibit a seasonal variability\nTraffic volume alone does not explain delay severity\n\nThese findings provide a strong foundation for predictive modeling or clustering analyses in subsequent work.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html",
+    "href": "qmd/05_airline_level_analysis.html",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "",
+    "text": "Flight delays may vary substantially across airlines due to differences in fleet size, operational strategies, network structure, and exposure to congestion. This section investigates airline-level heterogeneity in delay performance, focusing on distributional properties, severity indicators, and delay causes.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#introduction",
+    "href": "qmd/05_airline_level_analysis.html#introduction",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "",
+    "text": "Flight delays may vary substantially across airlines due to differences in fleet size, operational strategies, network structure, and exposure to congestion. This section investigates airline-level heterogeneity in delay performance, focusing on distributional properties, severity indicators, and delay causes.\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#distribution-of-flights-by-airline",
+    "href": "qmd/05_airline_level_analysis.html#distribution-of-flights-by-airline",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "2 Distribution of Flights by Airline",
+    "text": "2 Distribution of Flights by Airline\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nThe distribution of flights across airlines is highly unbalanced. Some carriers concentrate a large share of total traffic, which must be taken into account when interpreting comparative statistics.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#descriptive-statistics-of-delays-by-airline",
+    "href": "qmd/05_airline_level_analysis.html#descriptive-statistics-of-delays-by-airline",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "3 Descriptive Statistics of Delays by Airline",
+    "text": "3 Descriptive Statistics of Delays by Airline\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDifferences between mean and median delays reflect asymmetric distributions influenced by extreme delay events. The proportion of delays exceeding 15 minutes complements this analysis by capturing the frequency of significant operational disruptions.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#distribution-of-arrival-delays-by-airline",
+    "href": "qmd/05_airline_level_analysis.html#distribution-of-arrival-delays-by-airline",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "4 Distribution of Arrival Delays by Airline",
+    "text": "4 Distribution of Arrival Delays by Airline\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDelay distributions vary markedly across airlines, with differences in dispersion, skewness, and prevalence of extreme values.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#proportion-of-significant-delays-15-minutes",
+    "href": "qmd/05_airline_level_analysis.html#proportion-of-significant-delays-15-minutes",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "5 Proportion of Significant Delays (> 15 minutes)",
+    "text": "5 Proportion of Significant Delays (&gt; 15 minutes)\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nSome airlines exhibit a higher frequency of significant delays, suggesting structural differences in operational performance or exposure to constraints.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#delay-causes-by-airline",
+    "href": "qmd/05_airline_level_analysis.html#delay-causes-by-airline",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "6 Delay Causes by Airline",
+    "text": "6 Delay Causes by Airline\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nDelay profiles differ substantially across airlines. For some carriers, internal and late-aircraft delays dominate, indicating propagation effects within airline networks.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#effect-of-airline-on-delay-severity",
+    "href": "qmd/05_airline_level_analysis.html#effect-of-airline-on-delay-severity",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "7 Effect of Airline on Delay Severity",
+    "text": "7 Effect of Airline on Delay Severity\nKruskal–Wallis Test\n\nPlease enable JavaScript to experience the dynamic code cell content on this page.\nThe test reveals statistically significant differences in arrival delays across airlines (p &lt; 0.001). Airline punctuality performance is therefore not homogeneous.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#methodological-considerations",
+    "href": "qmd/05_airline_level_analysis.html#methodological-considerations",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "8 Methodological Considerations",
+    "text": "8 Methodological Considerations\n⚠️ Important note Due to the highly unbalanced distribution of flight volumes across airlines, these results must be interpreted with caution.\nPotential explanatory factors include:\n\nFleet size and aircraft rotation strategies\nHub dependency and congestion exposure\nOperational robustness and recovery capacity\nScheduling and buffer time policies\n\nFuture analyses could incorporate weighted comparisons or minimum flight thresholds to strengthen robustness.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  },
+  {
+    "objectID": "qmd/05_airline_level_analysis.html#conclusion",
+    "href": "qmd/05_airline_level_analysis.html#conclusion",
+    "title": "Flight Delays Analysis – Airline-Level Performance and Heterogeneity",
+    "section": "9 Conclusion",
+    "text": "9 Conclusion\nThis airline-level analysis highlights substantial heterogeneity in delay performance:\n\nSignificant differences in delay severity and frequency\nDistinct causal profiles across airlines\nEvidence of internal delay propagation mechanisms\n\nThese findings emphasize the importance of airline-specific strategies in mitigating flight delays and improving punctuality.",
+    "crumbs": [
+      "Project",
+      "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+    ]
+  }
+]
