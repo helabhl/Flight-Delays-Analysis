@@ -1,0 +1,279 @@
+---
+title: "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+author: "Hela Bouhlel"
+date: "2025-12-28"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["dplyr", "ggplot2", "tidyr", "lubridate"]
+filters:
+  - webr
+---
+## Introduction
+Beyond aggregate statistics, understanding flight delays requires analyzing their
+temporal evolution and interdependencies.
+This section focuses on:
+
+Monthly dynamics of delay causes
+
+Correlations between delay types
+
+Fine-grained temporal patterns
+
+Extreme delays and their propagation mechanisms
+
+## Monthly Evolution of Delay Causes
+```{webr-r}
+
+causes_month <- df %>%
+filter(cancelled == 0, diverted == 0) %>%
+group_by(year, month) %>%
+summarise(
+carrier = mean(carrier_delay, na.rm = TRUE),
+weather = mean(weather_delay, na.rm = TRUE),
+nas = mean(nas_delay, na.rm = TRUE),
+security = mean(security_delay, na.rm = TRUE),
+late_aircraft = mean(late_aircraft_delay, na.rm = TRUE),
+.groups = "drop"
+) %>%
+arrange(year, month)
+
+```
+
+```{webr-r}
+
+library(tidyr)
+
+causes_long <- causes_month %>%
+pivot_longer(
+cols = carrier,
+names_to = "cause",
+values_to = "delay"
+)
+```
+
+```{webr-r}
+
+
+ggplot(causes_long, aes(x = month, y = delay, color = cause)) +
+stat_summary(fun = mean, geom = "line", linewidth = 1.2) +
+labs(
+title = "Monthly Evolution of Delay Causes",
+x = "Month",
+y = "Average delay (minutes)",
+color = "Cause"
+) +
+theme_minimal()
+```
+
+Delay causes do not evolve uniformly over time.
+Some exhibit strong seasonal variability, highlighting differentiated temporal mechanisms.
+
+## Correlation Analysis Between Delay Causes (Spearman)
+```{webr-r}
+
+causes_df <- df %>%
+filter(cancelled == 0, diverted == 0) %>%
+select(
+carrier_delay,
+weather_delay,
+nas_delay,
+security_delay,
+late_aircraft_delay
+)
+```
+```{webr-r}
+
+
+cor_spearman <- cor(
+causes_df,
+use = "complete.obs",
+method = "spearman"
+)
+
+round(cor_spearman, 2)
+```
+
+Carrier-related delays are strongly correlated with late-aircraft delays,
+suggesting operational propagation effects within airline schedules.
+
+## Fine-Grained Temporal Analysis
+### Daily Time Series of Late Aircraft Delays
+```{webr-r}
+
+
+late_ts <- df %>%
+filter(cancelled == 0, diverted == 0) %>%
+group_by(fl_date) %>%
+summarise(
+late_mean = mean(late_aircraft_delay, na.rm = TRUE),
+late_sum = sum(late_aircraft_delay, na.rm = TRUE),
+.groups = "drop"
+) %>%
+arrange(fl_date)
+
+```
+```{webr-r}
+
+
+ggplot(late_ts, aes(x = fl_date, y = late_mean)) +
+geom_line() +
+labs(
+title = "Temporal Evolution of Late Aircraft Delays",
+x = "Date",
+y = "Average delay (minutes)"
+)
+```
+
+Pronounced temporal peaks suggest episodes of systemic disruption rather than isolated events.
+
+### Daily Zoom: January Case Study
+```{webr-r}
+
+library(lubridate)
+
+late_jan <- df %>%
+filter(
+cancelled == 0,
+diverted == 0,
+month(fl_date) == 1,
+arr_delay > 0
+) %>%
+group_by(fl_date) %>%
+summarise(
+late_mean = mean(arr_delay, na.rm = TRUE),
+late_sum = sum(arr_delay, na.rm = TRUE),
+.groups = "drop"
+) %>%
+arrange(fl_date)
+```
+```{webr-r}
+
+ggplot(late_jan, aes(x = fl_date, y = late_mean)) +
+geom_line(color = "black") +
+geom_point(size = 2) +
+labs(
+title = "Daily Arrival Delays – January",
+x = "Date",
+y = "Average delay (minutes)"
+) +
+theme_minimal()
+```
+
+Daily analysis reveals short but intense disruption episodes, invisible at monthly scale.
+
+## Extreme Delays (Outliers) and Temporal Accumulation
+```{webr-r}
+
+outliers_time <- df %>%
+select(
+fl_date,
+carrier_delay,
+weather_delay,
+nas_delay,
+security_delay,
+late_aircraft_delay
+) %>%
+pivot_longer(
+cols = -fl_date,
+names_to = "Cause",
+values_to = "Delay"
+) %>%
+filter(Delay > 0) %>%
+group_by(Cause) %>%
+mutate(
+Q1 = quantile(Delay, 0.25),
+Q3 = quantile(Delay, 0.75),
+IQR = Q3 - Q1,
+upper = Q3 + 1.5 * IQR
+) %>%
+filter(Delay > upper) %>%
+ungroup() %>%
+mutate(
+flight_date = as.Date(fl_date),
+month = floor_date(flight_date, "month")
+)
+```
+```{webr-r}
+
+outliers_monthly <- outliers_time %>%
+count(month, Cause)
+```
+```{webr-r}
+
+ggplot(outliers_monthly, aes(x = month, y = n, color = Cause)) +
+geom_line(linewidth = 1) +
+geom_point() +
+labs(
+title = "Accumulation of Extreme Delays Over Time",
+x = "Month",
+y = "Number of extreme delays"
+) +
+theme_minimal()
+```
+
+## Correlation of Extreme Delay Events
+```{webr-r}
+
+outliers_flag <- df %>%
+mutate(across(
+c(carrier_delay, weather_delay, nas_delay,
+security_delay, late_aircraft_delay),
+~ {
+q1 <- quantile(., 0.25, na.rm = TRUE)
+q3 <- quantile(., 0.75, na.rm = TRUE)
+iqr <- q3 - q1
+. > (q3 + 1.5 * iqr)
+},
+.names = "out_{.col}"
+))
+```
+```{webr-r}
+
+outlier_matrix <- outliers_flag %>%
+select(starts_with("out_")) %>%
+mutate(across(everything(), as.numeric))
+```
+```{webr-r}
+
+
+cor_outliers <- cor(
+outlier_matrix,
+method = "spearman",
+use = "complete.obs"
+)
+
+round(cor_outliers, 2)
+```
+## Interpretation and Operational Insights
+Propagation of internal delays
+Outliers associated with late_aircraft_delay and carrier_delay frequently occur together,
+highlighting cascading effects within airline operations.
+
+Exogenous disruptions
+Weather, NAS, and security-related outliers appear isolated and weakly correlated,
+confirming their exceptional and largely independent nature.
+
+Operational decision-making
+
+Internal causes represent a key lever for preventive action
+
+External causes require reactive and adaptive strategies
+
+## Conclusion
+This temporal analysis demonstrates that flight delays are not random events but exhibit:
+
+Strong temporal clustering
+
+Clear propagation mechanisms
+
+Distinct behaviors between internal and external causes
+
+These insights are essential for robust delay mitigation strategies and pave the way
+for predictive or causal modeling approaches.
+

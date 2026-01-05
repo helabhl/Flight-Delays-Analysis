@@ -1,0 +1,181 @@
+---
+title: "Flight Delays Analysis – Airline-Level Performance and Heterogeneity"
+author: "Hela Bouhlel"
+date: "2025-12-28"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["dplyr", "ggplot2", "tidyr"]
+filters:
+  - webr
+---
+## Introduction
+Flight delays may vary substantially across airlines due to differences in
+fleet size, operational strategies, network structure, and exposure to congestion.
+This section investigates airline-level heterogeneity in delay performance,
+focusing on distributional properties, severity indicators, and delay causes.
+
+## Distribution of Flights by Airline
+```{webr-r}
+
+df %>% count(op_unique_carrier)
+```
+
+The distribution of flights across airlines is highly unbalanced.
+Some carriers concentrate a large share of total traffic, which must be taken
+into account when interpreting comparative statistics.
+
+## Descriptive Statistics of Delays by Airline
+```{webr-r}
+
+carrier_stats <- df %>%
+filter(cancelled == 0 & diverted == 0) %>%
+group_by(op_unique_carrier) %>%
+summarise(
+total_flights = n(),
+mean_delay = mean(arr_delay, na.rm = TRUE),
+median_delay = median(arr_delay, na.rm = TRUE),
+prop_del15 = mean(arr_delay > 15, na.rm = TRUE),
+.groups = "drop"
+) %>%
+arrange(desc(mean_delay))
+
+carrier_stats
+```
+
+Differences between mean and median delays reflect asymmetric distributions
+influenced by extreme delay events.
+The proportion of delays exceeding 15 minutes complements this analysis by
+capturing the frequency of significant operational disruptions.
+
+## Distribution of Arrival Delays by Airline
+```{webr-r}
+
+ggplot(
+df %>% filter(cancelled == 0 & diverted == 0),
+aes(x = op_unique_carrier, y = arr_delay)
+) +
+geom_boxplot(fill = "lightblue") +
+labs(
+title = "Distribution of Arrival Delays by Airline",
+x = "Airline",
+y = "Arrival delay (minutes)"
+) +
+theme_minimal()
+```
+
+Delay distributions vary markedly across airlines, with differences in dispersion,
+skewness, and prevalence of extreme values.
+
+## Proportion of Significant Delays (> 15 minutes)
+```{webr-r}
+
+ggplot(
+carrier_stats,
+aes(x = reorder(op_unique_carrier, -prop_del15),
+y = prop_del15)
+) +
+geom_bar(stat = "identity", fill = "tomato") +
+labs(
+title = "Proportion of Flights Delayed More Than 15 Minutes by Airline",
+x = "Airline",
+y = "Proportion"
+) +
+theme_minimal()
+```
+
+Some airlines exhibit a higher frequency of significant delays, suggesting
+structural differences in operational performance or exposure to constraints.
+
+## Delay Causes by Airline
+```{webr-r}
+
+carrier_causes <- df %>%
+filter(cancelled == 0 & diverted == 0) %>%
+group_by(op_unique_carrier) %>%
+summarise(
+carrier_delay = sum(carrier_delay, na.rm = TRUE),
+weather_delay = sum(weather_delay, na.rm = TRUE),
+nas_delay = sum(nas_delay, na.rm = TRUE),
+security_delay = sum(security_delay, na.rm = TRUE),
+late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE),
+.groups = "drop"
+)
+
+carrier_causes
+```
+```{webr-r}
+
+carrier_causes_long <- carrier_causes %>%
+pivot_longer(
+cols = c(carrier_delay, weather_delay,
+nas_delay, late_aircraft_delay),
+names_to = "cause",
+values_to = "delay"
+)
+```
+
+```{webr-r}
+
+ggplot(
+carrier_causes_long,
+aes(x = op_unique_carrier, y = delay, fill = cause)
+) +
+geom_bar(stat = "identity") +
+labs(
+title = "Delay Cause Profiles by Airline",
+x = "Airline",
+y = "Total delay (minutes)",
+fill = "Cause"
+) +
+theme_minimal()
+```
+
+Delay profiles differ substantially across airlines.
+For some carriers, internal and late-aircraft delays dominate, indicating
+propagation effects within airline networks.
+
+## Effect of Airline on Delay Severity
+Kruskal–Wallis Test
+```{webr-r}
+
+kruskal.test(arr_delay ~ op_unique_carrier, data = df_clean)
+```
+The test reveals statistically significant differences in arrival delays
+across airlines (p < 0.001).
+Airline punctuality performance is therefore not homogeneous.
+
+## Methodological Considerations
+**⚠️ Important note**
+Due to the highly unbalanced distribution of flight volumes across airlines,
+these results must be interpreted with caution.
+
+Potential explanatory factors include:
+
+Fleet size and aircraft rotation strategies
+
+Hub dependency and congestion exposure
+
+Operational robustness and recovery capacity
+
+Scheduling and buffer time policies
+
+Future analyses could incorporate weighted comparisons or
+minimum flight thresholds to strengthen robustness.
+
+## Conclusion
+This airline-level analysis highlights substantial heterogeneity in delay performance:
+
+Significant differences in delay severity and frequency
+
+Distinct causal profiles across airlines
+
+Evidence of internal delay propagation mechanisms
+
+These findings emphasize the importance of airline-specific strategies
+in mitigating flight delays and improving punctuality.

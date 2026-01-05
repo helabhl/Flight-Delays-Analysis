@@ -1,0 +1,183 @@
+---
+title: "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+author: "Hela Bouhlel"
+date: "2025-12-28"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["dplyr", "ggplot2", "tidyr"]
+filters:
+  - webr
+---
+## Introduction
+This section investigates the underlying causes of delays and their temporal variability.
+The objective is to identify dominant delay drivers and assess whether delays exhibit
+seasonal patterns.
+
+## Total Delay Minutes by Cause
+```{webr-r}
+
+library(tidyr)
+
+cause_totals <- df %>%
+summarise(
+carrier_delay = sum(carrier_delay, na.rm = TRUE),
+weather_delay = sum(weather_delay, na.rm = TRUE),
+nas_delay = sum(nas_delay, na.rm = TRUE),
+security_delay = sum(security_delay, na.rm = TRUE),
+late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE)
+) %>%
+pivot_longer(
+everything(),
+names_to = "cause",
+values_to = "minutes"
+) %>%
+mutate(share = minutes / sum(minutes))
+
+cause_totals
+```
+Airline-related and late-aircraft delays account for the largest share of cumulative delay minutes,
+suggesting a strong propagation effect within the air transport system.
+
+## Visualization of Delay Causes
+```{webr-r}
+
+ggplot(cause_totals,
+aes(x = reorder(cause, minutes), y = minutes)) +
+geom_col(fill = "tomato") +
+coord_flip() +
+labs(
+title = "Total Delay Minutes by Cause",
+x = "Cause",
+y = "Delay minutes"
+)
+```
+Internal and operational causes dominate exogenous factors such as weather or security.
+
+## Internal vs External Delay Sources
+```{webr-r}
+internal_external <- df %>%
+summarise(
+internal = sum(carrier_delay + security_delay, na.rm = TRUE),
+external = sum(weather_delay + nas_delay + late_aircraft_delay, na.rm = TRUE)
+)
+
+internal_external
+```
+While external factors contribute significantly, internal causes remain a major lever
+for performance improvement by airlines.
+
+## Monthly Flight Volume
+```{webr-r}
+monthly_flights <- df %>%
+group_by(month) %>%
+summarise(total_flights = n())
+
+ggplot(monthly_flights,
+aes(x = factor(month), y = total_flights)) +
+geom_col(fill = "lightblue") +
+labs(
+title = "Number of Arrived Flights per Month",
+x = "Month",
+y = "Number of flights"
+) +
+theme_minimal()
+```
+Flight volume varies across months, reflecting seasonal traffic patterns.
+
+## Monthly Distribution of Delay Categories
+```{webr-r}
+df_clean <- df %>%
+mutate(
+delay_category = case_when(
+arr_delay <= 0 ~ "On time or early",
+arr_delay < 15 ~ "Delay < 15 min",
+arr_delay >= 15 ~ "Delay ≥ 15 min"
+)
+)
+
+monthly_delay_dist <- df_clean %>%
+group_by(month, delay_category) %>%
+summarise(n_flights = n(), .groups = "drop")
+```
+
+
+```{webr-r}
+ggplot(monthly_delay_dist,
+aes(x = factor(month),
+y = n_flights,
+fill = delay_category)) +
+geom_bar(stat = "identity") +
+labs(
+title = "Monthly Distribution of Flights by Delay Category",
+x = "Month",
+y = "Number of flights",
+fill = "Delay category"
+) +
+theme_minimal()
+```
+## Monthly Proportions Independent of Traffic Volume
+```{webr-r}
+monthly_delay_prop <- monthly_delay_dist %>%
+group_by(month) %>%
+mutate(prop = n_flights / sum(n_flights))
+
+ggplot(monthly_delay_prop,
+aes(x = factor(month),
+y = prop,
+fill = delay_category)) +
+geom_bar(stat = "identity", position = "fill") +
+scale_y_continuous(labels = scales::percent) +
+labs(
+title = "Monthly Proportion of Delay Categories",
+x = "Month",
+y = "Proportion",
+fill = "Delay category"
+) +
+theme_minimal()
+```
+Delay intensity varies substantially across months, combining both frequency and severity effects.
+
+## Effect of Month on Delays (Kruskal–Wallis Test)
+```{webr-r}
+kruskal.test(arr_delay ~ factor(month), data = df_clean)
+```
+The test confirms statistically significant differences in delay distributions across months,
+highlighting a clear seasonal effect.
+
+## Flight Volume vs Delay Severity (Spearman Correlation)
+```{webr-r}
+monthly_volume_delay <- df_clean %>%
+group_by(month) %>%
+summarise(
+total_flights = n(),
+mean_delay = mean(arr_delay, na.rm = TRUE)
+)
+
+cor.test(
+monthly_volume_delay$total_flights,
+monthly_volume_delay$mean_delay,
+method = "spearman"
+)
+```
+
+No monotonic relationship is observed between traffic volume and average delay, suggesting
+that congestion is not purely quantitative but driven by operational and contextual factors.
+
+## General Conclusion
+This section demonstrates that:
+
+Delay causes are predominantly internal and operational
+
+Delays exhibit strong seasonal variability
+
+Traffic volume alone does not explain delay severity
+
+These findings provide a strong foundation for predictive modeling or clustering analyses
+in subsequent work.
+

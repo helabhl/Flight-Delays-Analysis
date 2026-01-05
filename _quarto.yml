@@ -6,28 +6,26 @@ project:
     - "qmd/*.qmd"
 
 website:
-  title: "Elements of Data Analysis and Statistics - Lab Exercises"
-  site-url: "https://nevermind78.github.io/capstone_R/"
-  repo-url: "https://github.com/nevermind78/capstone_R"
+  title: "R Project - Flight Delays Analysis"
+  site-url: "https://helabhl.github.io/project_R/"
+  repo-url: "https://github.com/helabhl/project_R"
   
   repo-actions: [edit, issue]
   sidebar:
     style: "docked"
     search: true
     contents:
-      - section: Projects
+      - section: Project
         contents:
-          - qmd/01-pivot-tables-with-libreoffice.qmd
-          - qmd/03-discharge-elbe.qmd
-          - qmd/04-distributions-leaves.qmd
-          - qmd/05-distributions-fruits-tidyverse.qmd
-          - qmd/test_stat.qmd
-      - section: Presentations
+          - qmd/01_data_loading_cleaning.qmd
+          - qmd/02_descriptive_analysis_delays.qmd
+          - qmd/03_causes_and_seasonality.qmd
+          - qmd/04_temporal_dynamics_and_propagation.qmd
+          - qmd/05_airline_level_analysis.qmd
+      - section: Presentation
         contents:
-          - qmd/06-classical-tests.qmd
-      - section: other
-        contents:
-          - qmd/other.qmd
+          - qmd/presentation.qmd
+      
 
 format:
   html:
@@ -51,7 +49,7 @@ format:
 
 # Configuration WebR (R seulement)
 webr:
-  packages: ["dplyr", "ggplot2", "readxl", "tidyr", "lubridate", "car", "lmtest"]
+  packages: ["dplyr", "ggplot2", "readxl", "tidyr", "lubridate", "car", "lmtest","curl", "googledrive"]
 
 execute:
   freeze: true

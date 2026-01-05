@@ -1,0 +1,128 @@
+---
+title: "Flight Delays Analysis – Data Loading and Cleaning"
+author: "Hela Bouhlel"
+date: "2025-12-28"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["googledrive", "readr", "dplyr", "ggplot2", "curl"]
+filters:
+  - webr
+---
+
+##  Introduction
+
+Reliable analysis of flight delays requires clean, consistent, and well-understood data.
+Before performing any aggregation or modeling, it is essential to inspect the dataset structure
+and address potential data quality issues such as missing values and duplicated records.
+
+**Scientific aim:**
+Prepare the flight delay dataset for exploratory and statistical analysis by ensuring data integrity
+and consistency.
+
+## Package Loading and Data Import
+###  Required libraries
+```{webr-r}
+library(googledrive)
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(curl)
+
+```
+
+### Data import from Google Drive
+The dataset is stored remotely on Google Drive and imported directly using a shared access link.
+
+```{webr-r}
+url <- "qmd/data/flight_2024.csv"
+df <- read.csv(url)
+```
+## Initial Data Inspection
+### Preview of the dataset
+```{webr-r}
+head(df)
+```
+
+### Structure and variable overview
+The glimpse() function provides a concise summary of variable types and overall dataset structure.
+
+```{webr-r}
+
+glimpse(df)
+```
+### Description of Dataset Variables
+
+| Column Name              | Description |
+|--------------------------|-------------|
+| `year`                   | Year of the flight |
+| `month`                  | Month of the flight (1–12) |
+| `day_of_month`           | Day of the month |
+| `day_of_week`            | Day of the week (1 = Monday, 7 = Sunday) |
+| `fl_date`                | Flight date |
+| `op_unique_carrier`      | Unique airline carrier code |
+| `op_carrier_fl_num`      | Flight number |
+| `origin`                 | Departure airport code |
+| `origin_city_name`       | Departure city |
+| `origin_state_nm`        | Departure state |
+| `dest`                   | Arrival airport code |
+| `dest_city_name`         | Arrival city |
+| `dest_state_nm`          | Arrival state |
+| `crs_dep_time`           | Scheduled departure time |
+| `dep_time`               | Actual departure time |
+| `dep_delay`              | Departure delay (minutes) |
+| `taxi_out`               | Taxi-out time (minutes) |
+| `wheels_off`             | Time when aircraft leaves the ground |
+| `wheels_on`              | Time when aircraft lands |
+| `taxi_in`                | Taxi-in time (minutes) |
+| `arr_delay`              | Arrival delay (minutes) |
+| `carrier_delay`          | Delay caused by the airline |
+| `weather_delay`          | Delay due to weather conditions |
+| `nas_delay`              | Delay caused by air traffic system |
+| `security_delay`         | Delay due to security issues |
+| `late_aircraft_delay`    | Delay due to late arrival of previous aircraft |
+| `cancelled`              | Cancellation indicator (1 = cancelled, 0 = not cancelled) |
+| `diverted`               | Diversion indicator (1 = diverted, 0 = not diverted) |
+
+
+## Data Cleaning
+###   Missing values analysis
+Before deciding on imputation or filtering strategies, the number of missing values per variable
+is computed.
+
+```{webr-r}
+
+na_summary <- colSums(is.na(df))
+na_summary
+```
+
+**Interpretation:**
+This step allows identification of variables that may require special treatment during
+subsequent analyses.
+
+###  Removal of duplicated rows
+Duplicated observations can bias statistical results and must be removed.
+
+```{webr-r}
+sum(duplicated(df))
+df <- df %>% distinct()
+```
+## Conclusion
+This first preprocessing phase ensures that the dataset:
+
+* Is correctly imported and readable
+
+* Has a clearly identified structure
+
+* Is free from duplicated records
+
+* Has documented missing values
+
+These steps form a robust foundation for further exploratory analysis, aggregation of delays,
+and modeling of contributing factors.
+

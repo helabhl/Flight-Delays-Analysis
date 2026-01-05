@@ -1,0 +1,165 @@
+---
+title: "Flight Delays Analysis – Descriptive Statistics and Delay Severity"
+author: "Hela Bouhlel"
+date: "2025-12-28"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["dplyr", "ggplot2"]
+filters:
+  - webr
+---
+## Introduction
+This section provides a descriptive overview of flight delays, focusing on cancellation rates,
+delay severity, and distributional properties of arrival delays.
+The objective is to quantify the magnitude of delays and identify structural characteristics
+such as asymmetry and extreme values.
+
+## Proportions of Cancelled and Diverted Flights
+```{webr-r}
+
+total_flights <- nrow(df)
+canceled_flights <- sum(df$cancelled, na.rm = TRUE)
+diverted_flights <- sum(df$diverted, na.rm = TRUE)
+
+prop_canceled <- canceled_flights / total_flights
+prop_diverted <- diverted_flights / total_flights
+
+cat("Proportion of cancelled flights:",
+round(prop_canceled * 100, 2), "%\n")
+cat("Proportion of diverted flights:",
+round(prop_diverted * 100, 2), "%\n")
+```
+Cancelled and diverted flights are excluded from the analysis, as they do not provide
+an exploitable arrival delay measure.
+
+## Removal of Non-Exploitable Flights
+```{webr-r}
+
+df <- df %>%
+filter(
+cancelled == 0,
+diverted == 0,
+!is.na(arr_delay)
+)
+```
+## Flights with Positive Arrival Delay
+```{webr-r}
+
+df_clean <- df %>%
+mutate(arr_positive_delay = ifelse(arr_delay > 0, 1, 0))
+
+prop_positive_delay <- mean(df_clean$arr_positive_delay)
+
+paste0(round(prop_positive_delay * 100, 2),
+"% of arrived flights exhibit a positive delay")
+```
+A significant proportion of flights arrive late, confirming the relevance of the phenomenon
+under study.
+
+## Significant Delays (> 15 minutes)
+```{webr-r}
+
+prop_delay_15 <- mean(df$arr_delay > 15, na.rm = TRUE)
+
+paste0(round(prop_delay_15 * 100, 2),
+"% of arrived flights experience delays greater than 15 minutes")
+```
+## Severity of Delays Among Delayed Flights
+```{webr-r}
+
+
+flights_delayed <- df %>% filter(arr_delay > 0)
+
+prop_over15_among_delayed <- mean(flights_delayed$arr_delay > 15)
+
+paste0(round(prop_over15_among_delayed * 100, 2),
+"% of delayed flights exceed 15 minutes")
+```
+```{webr-r}
+
+table_delay <- table(
+ifelse(flights_delayed$arr_delay > 15,
+"Delay > 15 min", "Delay ≤ 15 min")
+)
+
+barplot(
+table_delay,
+col = c("lightgreen", "tomato"),
+main = "Proportion of Delayed Flights",
+ylab = "Number of flights"
+)
+```
+
+A substantial share of delayed flights exceeds the 15-minute operational threshold,
+commonly used as a regulatory reference.
+
+## Distribution of Arrival Delays
+```{webr-r}
+
+ggplot(df, aes(x = arr_delay)) +
+geom_histogram(bins = 50, fill = "steelblue", alpha = 0.7) +
+coord_cartesian(xlim = c(-100, 500)) +
+labs(
+title = "Distribution of Arrival Advances and Delays",
+x = "Minutes (negative = early, positive = delay)",
+y = "Number of flights"
+)
+```
+
+```{webr-r}
+
+ggplot(df %>% filter(arr_delay > 0),
+aes(x = arr_delay)) +
+geom_histogram(bins = 50, fill = "tomato", alpha = 0.7) +
+coord_cartesian(xlim = c(0, 500)) +
+labs(
+title = "Distribution of Arrival Delays (Delayed Flights Only)",
+x = "Delay minutes",
+y = "Number of flights"
+)
+```
+```{webr-r}
+
+boxplot(
+df_clean$arr_delay,
+main = "Boxplot of Arrival Delays",
+ylab = "Delay (minutes)"
+)
+```
+The distribution is strongly right-skewed with numerous outliers, justifying the use of
+robust statistics and non-parametric tests.
+
+## Summary Statistics
+```{webr-r}
+
+summary(df$arr_delay)
+```
+The marked difference between the negative median and positive mean highlights the influence
+of extreme delays. While the median reflects near-punctual performance, the mean is driven
+upward by rare but severe events.
+
+## Early Departures
+```{webr-r}
+
+early_departures <- df %>% filter(dep_delay < -15)
+nrow(early_departures)
+```
+Early departures may reflect operational strategies aimed at absorbing anticipated delays
+or systematic overestimation of taxi times.
+
+## Conclusion
+This descriptive analysis reveals that flight delays are characterized by:
+
+Strong asymmetry and heavy tails
+
+A non-negligible proportion of severe delays
+
+The presence of extreme events driving average performance
+
+These findings motivate further investigation into causal factors and temporal patterns.
