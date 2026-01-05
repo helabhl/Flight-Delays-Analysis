@@ -19,14 +19,19 @@ Beyond aggregate statistics, understanding flight delays requires analyzing thei
 temporal evolution and interdependencies.
 This section focuses on:
 
-Monthly dynamics of delay causes
+* Monthly dynamics of delay causes
 
-Correlations between delay types
+* Correlations between delay types
 
-Fine-grained temporal patterns
+* Fine-grained temporal patterns
 
-Extreme delays and their propagation mechanisms
+* Extreme delays and their propagation mechanisms
 
+
+```{webr-r}
+url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
+df <- read.csv(url)
+```
 ## Monthly Evolution of Delay Causes
 ```{webr-r}
 
@@ -43,21 +48,12 @@ late_aircraft = mean(late_aircraft_delay, na.rm = TRUE),
 ) %>%
 arrange(year, month)
 
-```
-
-```{webr-r}
-
-library(tidyr)
-
 causes_long <- causes_month %>%
-pivot_longer(
-cols = carrier,
-names_to = "cause",
-values_to = "delay"
-)
-```
-
-```{webr-r}
+  pivot_longer(
+    cols = carrier:late_aircraft,
+    names_to = "cause",
+    values_to = "delay"
+  )
 
 
 ggplot(causes_long, aes(x = month, y = delay, color = cause)) +
@@ -86,10 +82,6 @@ nas_delay,
 security_delay,
 late_aircraft_delay
 )
-```
-```{webr-r}
-
-
 cor_spearman <- cor(
 causes_df,
 use = "complete.obs",
@@ -105,8 +97,6 @@ suggesting operational propagation effects within airline schedules.
 ## Fine-Grained Temporal Analysis
 ### Daily Time Series of Late Aircraft Delays
 ```{webr-r}
-
-
 late_ts <- df %>%
 filter(cancelled == 0, diverted == 0) %>%
 group_by(fl_date) %>%
@@ -117,17 +107,15 @@ late_sum = sum(late_aircraft_delay, na.rm = TRUE),
 ) %>%
 arrange(fl_date)
 
-```
-```{webr-r}
+ggplot(late_ts, aes(x = fl_date, y = late_mean, group = 1)) +
+  geom_line(linewidth = 0.3) +
+  labs(
+    title = "Temporal Evolution of Late Aircraft Delays",
+    x = "Date",
+    y = "Average delay (minutes)"
+  ) +
+  theme_minimal()
 
-
-ggplot(late_ts, aes(x = fl_date, y = late_mean)) +
-geom_line() +
-labs(
-title = "Temporal Evolution of Late Aircraft Delays",
-x = "Date",
-y = "Average delay (minutes)"
-)
 ```
 
 Pronounced temporal peaks suggest episodes of systemic disruption rather than isolated events.
@@ -151,18 +139,16 @@ late_sum = sum(arr_delay, na.rm = TRUE),
 .groups = "drop"
 ) %>%
 arrange(fl_date)
-```
-```{webr-r}
+ggplot(late_jan, aes(x = fl_date, y = late_mean, group = 1)) +
+  geom_line(color = "black") +
+  geom_point(size = 2) +
+  labs(
+    title = "Daily Arrival Delays – January",
+    x = "Date",
+    y = "Average delay (minutes)"
+  ) +
+  theme_minimal()
 
-ggplot(late_jan, aes(x = fl_date, y = late_mean)) +
-geom_line(color = "black") +
-geom_point(size = 2) +
-labs(
-title = "Daily Arrival Delays – January",
-x = "Date",
-y = "Average delay (minutes)"
-) +
-theme_minimal()
 ```
 
 Daily analysis reveals short but intense disruption episodes, invisible at monthly scale.
@@ -198,13 +184,9 @@ mutate(
 flight_date = as.Date(fl_date),
 month = floor_date(flight_date, "month")
 )
-```
-```{webr-r}
 
 outliers_monthly <- outliers_time %>%
 count(month, Cause)
-```
-```{webr-r}
 
 ggplot(outliers_monthly, aes(x = month, y = n, color = Cause)) +
 geom_line(linewidth = 1) +
@@ -232,25 +214,19 @@ iqr <- q3 - q1
 },
 .names = "out_{.col}"
 ))
-```
-```{webr-r}
 
 outlier_matrix <- outliers_flag %>%
 select(starts_with("out_")) %>%
 mutate(across(everything(), as.numeric))
-```
-```{webr-r}
-
 
 cor_outliers <- cor(
 outlier_matrix,
 method = "spearman",
 use = "complete.obs"
 )
-
 round(cor_outliers, 2)
 ```
-## Interpretation and Operational Insights
+**Interpretation and Operational Insights**
 Propagation of internal delays
 Outliers associated with late_aircraft_delay and carrier_delay frequently occur together,
 highlighting cascading effects within airline operations.
@@ -259,20 +235,16 @@ Exogenous disruptions
 Weather, NAS, and security-related outliers appear isolated and weakly correlated,
 confirming their exceptional and largely independent nature.
 
-Operational decision-making
 
-Internal causes represent a key lever for preventive action
-
-External causes require reactive and adaptive strategies
 
 ## Conclusion
 This temporal analysis demonstrates that flight delays are not random events but exhibit:
 
-Strong temporal clustering
+* Strong temporal clustering
 
-Clear propagation mechanisms
+* Clear propagation mechanisms
 
-Distinct behaviors between internal and external causes
+* Distinct behaviors between internal and external causes
 
 These insights are essential for robust delay mitigation strategies and pave the way
 for predictive or causal modeling approaches.

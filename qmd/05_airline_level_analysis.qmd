@@ -20,6 +20,11 @@ fleet size, operational strategies, network structure, and exposure to congestio
 This section investigates airline-level heterogeneity in delay performance,
 focusing on distributional properties, severity indicators, and delay causes.
 
+```{webr-r}
+url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
+df <- read.csv(url)
+```
+
 ## Distribution of Flights by Airline
 ```{webr-r}
 
@@ -107,10 +112,6 @@ late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE),
 .groups = "drop"
 )
 
-carrier_causes
-```
-```{webr-r}
-
 carrier_causes_long <- carrier_causes %>%
 pivot_longer(
 cols = c(carrier_delay, weather_delay,
@@ -118,9 +119,6 @@ nas_delay, late_aircraft_delay),
 names_to = "cause",
 values_to = "delay"
 )
-```
-
-```{webr-r}
 
 ggplot(
 carrier_causes_long,
@@ -157,13 +155,13 @@ these results must be interpreted with caution.
 
 Potential explanatory factors include:
 
-Fleet size and aircraft rotation strategies
+* Fleet size and aircraft rotation strategies
 
-Hub dependency and congestion exposure
+* Hub dependency and congestion exposure
 
-Operational robustness and recovery capacity
+* Operational robustness and recovery capacity
 
-Scheduling and buffer time policies
+* Scheduling and buffer time policies
 
 Future analyses could incorporate weighted comparisons or
 minimum flight thresholds to strengthen robustness.
@@ -171,11 +169,11 @@ minimum flight thresholds to strengthen robustness.
 ## Conclusion
 This airline-level analysis highlights substantial heterogeneity in delay performance:
 
-Significant differences in delay severity and frequency
+* Significant differences in delay severity and frequency
 
-Distinct causal profiles across airlines
+* Distinct causal profiles across airlines
 
-Evidence of internal delay propagation mechanisms
+* Evidence of internal delay propagation mechanisms
 
 These findings emphasize the importance of airline-specific strategies
 in mitigating flight delays and improving punctuality.

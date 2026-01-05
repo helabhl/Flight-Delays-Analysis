@@ -18,7 +18,10 @@ filters:
 This section investigates the underlying causes of delays and their temporal variability.
 The objective is to identify dominant delay drivers and assess whether delays exhibit
 seasonal patterns.
-
+```{webr-r}
+url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
+df <- read.csv(url)
+```
 ## Total Delay Minutes by Cause
 ```{webr-r}
 
@@ -88,7 +91,12 @@ y = "Number of flights"
 ) +
 theme_minimal()
 ```
-Flight volume varies across months, reflecting seasonal traffic patterns.
+Flight volume varies across months, reflecting seasonal traffic patterns: 
+* The data suggests a summer peak (July) and a fall increase (October).
+
+* Early months (Jan–Feb) have fewer flights, possibly due to post-holiday slowdown.
+
+* Late months (Nov–Dec) show slightly lower numbers, possibly before the holiday surge.
 
 ## Monthly Distribution of Delay Categories
 ```{webr-r}
@@ -143,14 +151,67 @@ theme_minimal()
 ```
 Delay intensity varies substantially across months, combining both frequency and severity effects.
 
-## Effect of Month on Delays (Kruskal–Wallis Test)
+## Effect of Month on Flight Delays (Kruskal–Wallis Test)
+**Research Question :**
+Do arrival delays significantly differ across months of the year?
+
+**Statistical Hypotheses**
+
+* **H₀ (Null hypothesis)**
+The distribution of arrival delays (arr_delay) is identical across all months.
+→ There is no seasonal effect on flight delays.
+
+* **H₁ (Alternative hypothesis)**
+At least one month has a different delay distribution.
+→ There is a significant seasonal effect on flight delays.
+
+**Statistical Test**
+
+A Kruskal–Wallis rank-sum test was applied because:
+
+* arrival delays are non-normally distributed
+
+* extreme values (outliers) are present
+
+* more than two independent groups (12 months) are compared
 ```{webr-r}
 kruskal.test(arr_delay ~ factor(month), data = df_clean)
 ```
-The test confirms statistically significant differences in delay distributions across months,
-highlighting a clear seasonal effect.
+
+
+**Decision:** Reject the null hypothesis **(H₀)**.
+
+**Conclusion:**
+Arrival delay distributions differ significantly across months, confirming the presence of a strong seasonal effect.
+
+This seasonal variability may be explained by:
+
+* increased demand during summer and holiday periods
+
+* adverse weather conditions during winter months
 
 ## Flight Volume vs Delay Severity (Spearman Correlation)
+**Research Question**
+
+Do days with higher flight volumes experience more severe arrival delays?
+
+**Statistical Hypotheses**
+
+**H₀ (Null hypothesis)**
+There is no association between daily flight volume and arrival delay severity.
+
+**H₁ (Alternative hypothesis)**
+Daily flight volume is associated with arrival delay severity.
+
+**Statistical Test**
+
+Monthly aggregates were computed and analyzed using **Spearman’s rank correlation**, which:
+
+* does not assume linearity
+
+* is robust to non-normal distributions
+
+* measures monotonic relationships
 ```{webr-r}
 monthly_volume_delay <- df_clean %>%
 group_by(month) %>%
@@ -166,17 +227,34 @@ method = "spearman"
 )
 ```
 
-No monotonic relationship is observed between traffic volume and average delay, suggesting
-that congestion is not purely quantitative but driven by operational and contextual factors.
+
+**Interpretation**
+The results show a statistically significant positive correlation (ρ = 0.21, p < 0.001), indicating that days with higher traffic volumes tend to experience longer arrival delays.
+
+
+**Decision:** 
+Reject the null hypothesis **(H₀)**.
+
+**Conclusion:**
+
+Days with higher traffic tend to experience longer arrival delays,
+
+but the effect remains moderate and highly variable.
+
+In other words:
+
+* Traffic contributes to delays
+
+* It is not the dominant factor
 
 ## General Conclusion
 This section demonstrates that:
 
-Delay causes are predominantly internal and operational
+* Delay causes are predominantly internal and operational
 
-Delays exhibit strong seasonal variability
+* Delays exhibit a seasonal variability
 
-Traffic volume alone does not explain delay severity
+* Traffic volume alone does not explain delay severity
 
 These findings provide a strong foundation for predictive modeling or clustering analyses
 in subsequent work.

@@ -10,7 +10,7 @@ format:
 webr:
   show-startup-message: false
   emulate-r: true
-  packages: ["googledrive", "readr", "dplyr", "ggplot2", "curl"]
+  packages: ["readr", "dplyr", "ggplot2"]
 filters:
   - webr
 ---
@@ -28,11 +28,9 @@ and consistency.
 ## Package Loading and Data Import
 ###  Required libraries
 ```{webr-r}
-library(googledrive)
 library(readr)
 library(dplyr)
 library(ggplot2)
-library(curl)
 
 ```
 
@@ -40,7 +38,7 @@ library(curl)
 The dataset is stored remotely on Google Drive and imported directly using a shared access link.
 
 ```{webr-r}
-url <- "qmd/data/flight_2024.csv"
+url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
 df <- read.csv(url)
 ```
 ## Initial Data Inspection

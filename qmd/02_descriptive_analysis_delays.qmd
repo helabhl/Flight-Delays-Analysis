@@ -20,6 +20,10 @@ delay severity, and distributional properties of arrival delays.
 The objective is to quantify the magnitude of delays and identify structural characteristics
 such as asymmetry and extreme values.
 
+```{webr-r}
+url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
+df <- read.csv(url)
+```
 ## Proportions of Cancelled and Diverted Flights
 ```{webr-r}
 
@@ -141,7 +145,7 @@ robust statistics and non-parametric tests.
 summary(df$arr_delay)
 ```
 The marked difference between the negative median and positive mean highlights the influence
-of extreme delays. While the median reflects near-punctual performance, the mean is driven
+of extreme delays. While the median reflects punctuality, the mean is driven
 upward by rare but severe events.
 
 ## Early Departures
@@ -156,10 +160,10 @@ or systematic overestimation of taxi times.
 ## Conclusion
 This descriptive analysis reveals that flight delays are characterized by:
 
-Strong asymmetry and heavy tails
+* Strong asymmetry and heavy tails
 
-A non-negligible proportion of severe delays
+* A non-negligible proportion of severe delays
 
-The presence of extreme events driving average performance
+* The presence of extreme events driving average performance
 
-These findings motivate further investigation into causal factors and temporal patterns.
+* These findings motivate further investigation into causal factors and temporal patterns.
