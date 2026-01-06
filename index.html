@@ -121,31 +121,31 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./qmd/01_data_loading_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Flight Delays Analysis – Data Loading and Cleaning</span></a>
+ <span class="menu-text">Data Loading and Cleaning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./qmd/02_descriptive_analysis_delays.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Flight Delays Analysis – Descriptive Statistics and Delay Severity</span></a>
+ <span class="menu-text">Descriptive Statistics and Delay Severity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./qmd/03_causes_and_seasonality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Flight Delays Analysis – Causes, Seasonality and Explanatory Factors</span></a>
+ <span class="menu-text">Causes, Seasonality and Explanatory Factors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./qmd/04_temporal_dynamics_and_propagation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Flight Delays Analysis – Temporal Dynamics and Propagation Effects</span></a>
+ <span class="menu-text">Temporal Dynamics and Propagation Effects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./qmd/05_airline_level_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Flight Delays Analysis – Airline-Level Performance and Heterogeneity</span></a>
+ <span class="menu-text">Airline-Level Performance and Heterogeneity</span></a>
   </div>
 </li>
       </ul>
@@ -162,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./qmd/presentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">presentation.html</span></a>
+ <span class="menu-text">Flight Delays Analysis 2024</span></a>
   </div>
 </li>
       </ul>
@@ -178,8 +178,9 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
-  <li><a href="#related-pages" id="toc-related-pages" class="nav-link" data-scroll-target="#related-pages"><span class="header-section-number">2</span> Related Pages</a></li>
-  <li><a href="#author" id="toc-author" class="nav-link" data-scroll-target="#author"><span class="header-section-number">3</span> Author</a></li>
+  <li><a href="#project-modules" id="toc-project-modules" class="nav-link" data-scroll-target="#project-modules"><span class="header-section-number">2</span> Project Modules</a></li>
+  <li><a href="#related-resources" id="toc-related-resources" class="nav-link" data-scroll-target="#related-resources"><span class="header-section-number">3</span> Related Resources</a></li>
+  <li><a href="#author" id="toc-author" class="nav-link" data-scroll-target="#author"><span class="header-section-number">4</span> Author</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/helabhl/project_R/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/project_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -207,19 +208,45 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>Flight delays represent a major challenge for air transportation systems, affecting passengers, airlines, and airport operations. This project aims to analyze flight delays in 2024, identify key influencing factors, and extract actionable insights using statistical analysis and data visualization.</p>
+<p>Flight delays represent a major challenge for air transportation systems, affecting passengers, airlines, and airport operations. This project aims to analyze flight delays in 2024, identify key influencing factors, and extract actionable insights using statistical analysis and data visualization with <strong>R</strong> and <strong>Quarto</strong>.</p>
 </section>
-<section id="related-pages" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="related-pages"><span class="header-section-number">2</span> Related Pages</h2>
+<section id="project-modules" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="project-modules"><span class="header-section-number">2</span> Project Modules</h2>
+<p>The analysis is divided into the following sections:</p>
+<ol type="1">
+<li><a href="./qmd/01_data_loading_cleaning.html"><strong>Data Loading &amp; Cleaning</strong></a>
 <ul>
-<li><a href=""><strong>Lecture slides</strong></a></li>
-<li><a href=""><strong>Datasets</strong></a></li>
-<li><a href="">Source code &nbsp;github</a></li>
+<li>Processing raw data and handling missing values.</li>
+</ul></li>
+<li><a href="./qmd/02_descriptive_analysis_delays.html"><strong>Descriptive Statistics</strong></a>
+<ul>
+<li>Overview of delay distributions and severity.</li>
+</ul></li>
+<li><a href="./qmd/03_causes_and_seasonality.html"><strong>Causes &amp; Seasonality</strong></a>
+<ul>
+<li>Investigating why delays happen and when they occur.</li>
+</ul></li>
+<li><a href="./qmd/04_temporal_dynamics_and_propagation.html"><strong>Temporal Dynamics</strong></a>
+<ul>
+<li>Analyzing propagation effects and evolution over time.</li>
+</ul></li>
+<li><a href="./qmd/05_airline_level_analysis.html"><strong>Airline Analysis</strong></a>
+<ul>
+<li>Comparative performance of different airlines.</li>
+</ul></li>
+</ol>
+</section>
+<section id="related-resources" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="related-resources"><span class="header-section-number">3</span> Related Resources</h2>
+<ul>
+<li><a href="./qmd/presentation.html"><strong>Project Presentation</strong></a></li>
+<li><a href="https://github.com/helabhl/project_R"><strong>Source Code (GitHub)</strong></a></li>
+<li><a href="https://github.com/helabhl/Flight-Delays-Analysis/blob/main/qmd/data/flight_2024.csv"><strong>Dataset</strong></a></li>
 </ul>
 </section>
-<section id="author" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="author"><span class="header-section-number">3</span> Author</h2>
-<p>Hela Bouhlel</p>
+<section id="author" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="author"><span class="header-section-number">4</span> Author</h2>
+<p><strong>Hela Bouhlel</strong></p>
 
 
 </section>
