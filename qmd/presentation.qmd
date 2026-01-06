@@ -1,0 +1,94 @@
+---
+title: "Flight Delays Analysis 2024"
+author: "Hela Bouhlel"
+format: revealjs
+webr:
+  show-startup-message: false
+  emulate-r: true
+  packages: ["dplyr", "ggplot2", "tidyr"]
+filters:
+  - webr
+---
+
+## Introduction
+
+- **Objective**: Analyze flight delays in 2024 to identify causes and patterns.
+- **Data**: Flight records from 2024.
+- **Key Areas**:
+  - Descriptive Statistics
+  - Causes & Seasonality
+  - Temporal Dynamics
+  - Airline Performance
+
+```{webr-r}
+#| context: setup
+#| include: false
+url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
+df <- read.csv(url)
+```
+
+## The State of Delays
+
+- **Skewed Distribution**: Most flights are on time, but the "long tail" of delays is significant.
+- **Severity**: Over **15%** of flights experience delays > 15 minutes.
+- **Impact**: Average delay is driven heavily by extreme outliers rather than typical performance.
+
+## Why Do Delays Happen?
+
+- **Late Aircraft**: The dominant cause, indicating strong **network propagation**.
+- **Carrier Ops**: Internal issues (crew, maintenance) are the second largest factor.
+- **External Factors**: Weather and NAS play a smaller role than operational issues.
+
+```{webr-r}
+#| fig-height: 4
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+cause_totals <- df %>%
+  summarise(
+    carrier_delay = sum(carrier_delay, na.rm = TRUE),
+    weather_delay = sum(weather_delay, na.rm = TRUE),
+    nas_delay = sum(nas_delay, na.rm = TRUE),
+    security_delay = sum(security_delay, na.rm = TRUE),
+    late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE)
+  ) %>%
+  pivot_longer(everything(), names_to = "cause", values_to = "minutes")
+
+ggplot(cause_totals, aes(x = reorder(cause, minutes), y = minutes)) +
+  geom_col(fill = "tomato") +
+  coord_flip() +
+  labs(title = "Total Delay Minutes by Cause", x = "Cause", y = "Minutes") +
+  theme_minimal()
+```
+
+## Seasonality & Time
+
+- **Seasonal Peaks**: Delays spike in **Summer (July)** and **Fall (October)**.
+- **Traffic Impact**: Higher daily flight volumes correlate with longer delays.
+- **Temporal Clustering**: Delays happen in **episodes**, not randomly.
+
+```{webr-r}
+#| fig-height: 4
+monthly_flights <- df %>%
+  filter(arr_delay > 0) %>%
+  group_by(month) %>%
+  summarise(mean_delay = mean(arr_delay, na.rm = TRUE))
+
+ggplot(monthly_flights, aes(x = factor(month), y = mean_delay)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Average Delay by Month", x = "Month", y = "Avg Delay (min)") +
+  theme_minimal()
+```
+
+## Airline Performance
+
+- **Heterogeneity**: Performance varies extensively between airlines.
+- **Propagation Vulnerability**: Some carriers are more susceptible to cascading "Late Aircraft" delays.
+- **Strategy**: Addressing internal inefficiencies is the most direct path to improvement.
+
+## Conclusion
+
+- **Main Driver**: Operational cascading (Late Aircraft) is the primary engine of delays.
+- **Key Factor**: Seasonality and traffic volume act as amplifiers.
+- **Takeaway**: Reducing initial internal delays is crucial to stopping the network propagation effects.

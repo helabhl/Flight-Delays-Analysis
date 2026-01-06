@@ -1,5 +1,5 @@
 ---
-title: "Flight Delays Analysis – Causes, Seasonality and Explanatory Factors"
+title: "Causes, Seasonality and Explanatory Factors"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:

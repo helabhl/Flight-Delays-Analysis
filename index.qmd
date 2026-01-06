@@ -1,20 +1,32 @@
 ---
-title: ""
-subtitle: ""
+title: "Analysis of Flight Delays (2024)"
 ---
 
 ## Introduction
 
+Flight delays represent a major challenge for air transportation systems, affecting passengers, airlines, and airport operations. This project aims to analyze flight delays in 2024, identify key influencing factors, and extract actionable insights using statistical analysis and data visualization with **R** and **Quarto**.
 
+## Project Modules
 
+The analysis is divided into the following sections:
 
+1.  [**Data Loading & Cleaning**](qmd/01_data_loading_cleaning.qmd)
+    *   Processing raw data and handling missing values.
+2.  [**Descriptive Statistics**](qmd/02_descriptive_analysis_delays.qmd)
+    *   Overview of delay distributions and severity.
+3.  [**Causes & Seasonality**](qmd/03_causes_and_seasonality.qmd)
+    *   Investigating why delays happen and when they occur.
+4.  [**Temporal Dynamics**](qmd/04_temporal_dynamics_and_propagation.qmd)
+    *   Analyzing propagation effects and evolution over time.
+5.  [**Airline Analysis**](qmd/05_airline_level_analysis.qmd)
+    *   Comparative performance of different airlines.
 
-## Related Pages
+## Related Resources
 
-* [**Lecture slides**]()
-* [**Datasets**]()
-* [Source code \ github]()
+*   [**Project Presentation**](qmd/presentation.qmd)
+*   [**Source Code (GitHub)**](https://github.com/helabhl/project_R)
+*   [**Dataset**](https://github.com/helabhl/Flight-Delays-Analysis/blob/main/qmd/data/flight_2024.csv)
 
 ## Author
 
-Hela Bouhlel
+**Hela Bouhlel**

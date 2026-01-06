@@ -1,1 +1,4 @@
-https://r-wasm.github.io/quarto-live/getting_started/installation.html
+git add .
+git commit -m "Update analysis"
+git push
+quarto publish gh-pages

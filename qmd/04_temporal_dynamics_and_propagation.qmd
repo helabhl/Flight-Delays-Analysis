@@ -1,5 +1,5 @@
 ---
-title: "Flight Delays Analysis – Temporal Dynamics and Propagation Effects"
+title: "Temporal Dynamics and Propagation Effects"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:
