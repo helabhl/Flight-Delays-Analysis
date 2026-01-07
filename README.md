@@ -18,7 +18,7 @@ The project is structured into sequential modules, each addressing specific rese
 
 ### 1. Data Loading & Cleaning
 *   **File**: [`qmd/01_data_loading_cleaning.qmd`](qmd/01_data_loading_cleaning.qmd)
-*   **Process**: Importing data from Google Drive, inspecting structure, handling missing values, and removing duplicated records to ensure data integrity.
+*   **Process**: Importing data, inspecting structure, handling missing values, and removing duplicated records to ensure data integrity.
 
 ### 2. Descriptive Statistics
 *   **File**: [`qmd/02_descriptive_statistics.qmd`](qmd/02_descriptive_statistics.qmd)
