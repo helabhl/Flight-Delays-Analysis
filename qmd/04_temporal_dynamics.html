@@ -9,7 +9,7 @@
 <meta name="author" content="Hela Bouhlel">
 <meta name="dcterms.date" content="2025-12-28">
 
-<title>Data Loading &amp; Cleaning – R Project - Flight Delays Analysis</title>
+<title>Temporal Dynamics – R Project - Flight Delays Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -348,7 +348,7 @@ iframe.qwebr-output-code-browse {
 // Document level settings ----
 
 // Determine if we need to install R packages
-globalThis.qwebrInstallRPackagesList = ['readr', 'dplyr', 'ggplot2'];
+globalThis.qwebrInstallRPackagesList = ['dplyr', 'ggplot2', 'tidyr', 'lubridate'];
 
 // Specify possible locations to search for the repository
 globalThis.qwebrPackageRepoURLS = ['https://repo.r-wasm.org/'];
@@ -370,7 +370,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"library(readr)\nlibrary(dplyr)\nlibrary(ggplot2)","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"url <- \"https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv\"\ndf <- read.csv(url)","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"head(df)","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"glimpse(df)","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"na_summary <- colSums(is.na(df))\nna_summary","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"sum(duplicated(df))\ndf <- df %>% distinct()","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"url <- \"https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv\"\ndf <- read.csv(url)","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"causes_month <- df %>%\nfilter(cancelled == 0, diverted == 0) %>%\ngroup_by(year, month) %>%\nsummarise(\ncarrier = mean(carrier_delay, na.rm = TRUE),\nweather = mean(weather_delay, na.rm = TRUE),\nnas = mean(nas_delay, na.rm = TRUE),\nsecurity = mean(security_delay, na.rm = TRUE),\nlate_aircraft = mean(late_aircraft_delay, na.rm = TRUE),\n.groups = \"drop\"\n) %>%\narrange(year, month)\n\ncauses_long <- causes_month %>%\n  pivot_longer(\n    cols = carrier:late_aircraft,\n    names_to = \"cause\",\n    values_to = \"delay\"\n  )\n\n\nggplot(causes_long, aes(x = month, y = delay, color = cause)) +\nstat_summary(fun = mean, geom = \"line\", linewidth = 1.2) +\nlabs(\ntitle = \"Monthly Evolution of Delay Causes\",\nx = \"Month\",\ny = \"Average delay (minutes)\",\ncolor = \"Cause\"\n) +\ntheme_minimal()","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"causes_df <- df %>%\nfilter(cancelled == 0, diverted == 0) %>%\nselect(\ncarrier_delay,\nweather_delay,\nnas_delay,\nsecurity_delay,\nlate_aircraft_delay\n)\ncor_spearman <- cor(\ncauses_df,\nuse = \"complete.obs\",\nmethod = \"spearman\"\n)\n\nround(cor_spearman, 2)","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"late_ts <- df %>%\nfilter(cancelled == 0, diverted == 0) %>%\ngroup_by(fl_date) %>%\nsummarise(\nlate_mean = mean(late_aircraft_delay, na.rm = TRUE),\nlate_sum = sum(late_aircraft_delay, na.rm = TRUE),\n.groups = \"drop\"\n) %>%\narrange(fl_date)\n\nggplot(late_ts, aes(x = fl_date, y = late_mean, group = 1)) +\n  geom_line(linewidth = 0.3) +\n  labs(\n    title = \"Temporal Evolution of Late Aircraft Delays\",\n    x = \"Date\",\n    y = \"Average delay (minutes)\"\n  ) +\n  theme_minimal()","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(lubridate)\n\nlate_jan <- df %>%\nfilter(\ncancelled == 0,\ndiverted == 0,\nmonth(fl_date) == 1,\narr_delay > 0\n) %>%\ngroup_by(fl_date) %>%\nsummarise(\nlate_mean = mean(arr_delay, na.rm = TRUE),\nlate_sum = sum(arr_delay, na.rm = TRUE),\n.groups = \"drop\"\n) %>%\narrange(fl_date)\nggplot(late_jan, aes(x = fl_date, y = late_mean, group = 1)) +\n  geom_line(color = \"black\") +\n  geom_point(size = 2) +\n  labs(\n    title = \"Daily Arrival Delays – January\",\n    x = \"Date\",\n    y = \"Average delay (minutes)\"\n  ) +\n  theme_minimal()","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"outliers_time <- df %>%\nselect(\nfl_date,\ncarrier_delay,\nweather_delay,\nnas_delay,\nsecurity_delay,\nlate_aircraft_delay\n) %>%\npivot_longer(\ncols = -fl_date,\nnames_to = \"Cause\",\nvalues_to = \"Delay\"\n) %>%\nfilter(Delay > 0) %>%\ngroup_by(Cause) %>%\nmutate(\nQ1 = quantile(Delay, 0.25),\nQ3 = quantile(Delay, 0.75),\nIQR = Q3 - Q1,\nupper = Q3 + 1.5 * IQR\n) %>%\nfilter(Delay > upper) %>%\nungroup() %>%\nmutate(\nflight_date = as.Date(fl_date),\nmonth = floor_date(flight_date, \"month\")\n)\n\noutliers_monthly <- outliers_time %>%\ncount(month, Cause)\n\nggplot(outliers_monthly, aes(x = month, y = n, color = Cause)) +\ngeom_line(linewidth = 1) +\ngeom_point() +\nlabs(\ntitle = \"Accumulation of Extreme Delays Over Time\",\nx = \"Month\",\ny = \"Number of extreme delays\"\n) +\ntheme_minimal()","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"outliers_flag <- df %>%\nmutate(across(\nc(carrier_delay, weather_delay, nas_delay,\nsecurity_delay, late_aircraft_delay),\n~ {\nq1 <- quantile(., 0.25, na.rm = TRUE)\nq3 <- quantile(., 0.75, na.rm = TRUE)\niqr <- q3 - q1\n. > (q3 + 1.5 * iqr)\n},\n.names = \"out_{.col}\"\n))\n\noutlier_matrix <- outliers_flag %>%\nselect(starts_with(\"out_\")) %>%\nmutate(across(everything(), as.numeric))\n\ncor_outliers <- cor(\noutlier_matrix,\nmethod = \"spearman\",\nuse = \"complete.obs\"\n)\nround(cor_outliers, 2)","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script>
 <script type="module">
@@ -1637,7 +1637,7 @@ globalThis.qwebrExecuteCode = async function (
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Data Loading &amp; Cleaning</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/04_temporal_dynamics.html">Temporal Dynamics</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -1673,7 +1673,7 @@ globalThis.qwebrExecuteCode = async function (
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../qmd/01_data_loading_cleaning.html" class="sidebar-item-text sidebar-link active">
+  <a href="../qmd/01_data_loading_cleaning.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Loading &amp; Cleaning</span></a>
   </div>
 </li>
@@ -1691,7 +1691,7 @@ globalThis.qwebrExecuteCode = async function (
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../qmd/04_temporal_dynamics.html" class="sidebar-item-text sidebar-link">
+  <a href="../qmd/04_temporal_dynamics.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Temporal Dynamics</span></a>
   </div>
 </li>
@@ -1731,25 +1731,18 @@ globalThis.qwebrExecuteCode = async function (
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
-  <li><a href="#package-loading-and-data-import" id="toc-package-loading-and-data-import" class="nav-link" data-scroll-target="#package-loading-and-data-import"><span class="header-section-number">2</span> Package Loading and Data Import</a>
+  <li><a href="#monthly-evolution-of-delay-causes" id="toc-monthly-evolution-of-delay-causes" class="nav-link" data-scroll-target="#monthly-evolution-of-delay-causes"><span class="header-section-number">2</span> Monthly Evolution of Delay Causes</a></li>
+  <li><a href="#correlation-analysis-between-delay-causes-spearman" id="toc-correlation-analysis-between-delay-causes-spearman" class="nav-link" data-scroll-target="#correlation-analysis-between-delay-causes-spearman"><span class="header-section-number">3</span> Correlation Analysis Between Delay Causes (Spearman)</a></li>
+  <li><a href="#fine-grained-temporal-analysis" id="toc-fine-grained-temporal-analysis" class="nav-link" data-scroll-target="#fine-grained-temporal-analysis"><span class="header-section-number">4</span> Fine-Grained Temporal Analysis</a>
   <ul class="collapse">
-  <li><a href="#required-libraries" id="toc-required-libraries" class="nav-link" data-scroll-target="#required-libraries"><span class="header-section-number">2.1</span> Required libraries</a></li>
-  <li><a href="#data-import-from-google-drive" id="toc-data-import-from-google-drive" class="nav-link" data-scroll-target="#data-import-from-google-drive"><span class="header-section-number">2.2</span> Data import from Google Drive</a></li>
+  <li><a href="#daily-time-series-of-late-aircraft-delays" id="toc-daily-time-series-of-late-aircraft-delays" class="nav-link" data-scroll-target="#daily-time-series-of-late-aircraft-delays"><span class="header-section-number">4.1</span> Daily Time Series of Late Aircraft Delays</a></li>
+  <li><a href="#daily-zoom-january-case-study" id="toc-daily-zoom-january-case-study" class="nav-link" data-scroll-target="#daily-zoom-january-case-study"><span class="header-section-number">4.2</span> Daily Zoom: January Case Study</a></li>
   </ul></li>
-  <li><a href="#initial-data-inspection" id="toc-initial-data-inspection" class="nav-link" data-scroll-target="#initial-data-inspection"><span class="header-section-number">3</span> Initial Data Inspection</a>
-  <ul class="collapse">
-  <li><a href="#preview-of-the-dataset" id="toc-preview-of-the-dataset" class="nav-link" data-scroll-target="#preview-of-the-dataset"><span class="header-section-number">3.1</span> Preview of the dataset</a></li>
-  <li><a href="#structure-and-variable-overview" id="toc-structure-and-variable-overview" class="nav-link" data-scroll-target="#structure-and-variable-overview"><span class="header-section-number">3.2</span> Structure and variable overview</a></li>
-  <li><a href="#description-of-dataset-variables" id="toc-description-of-dataset-variables" class="nav-link" data-scroll-target="#description-of-dataset-variables"><span class="header-section-number">3.3</span> Description of Dataset Variables</a></li>
-  </ul></li>
-  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning"><span class="header-section-number">4</span> Data Cleaning</a>
-  <ul class="collapse">
-  <li><a href="#missing-values-analysis" id="toc-missing-values-analysis" class="nav-link" data-scroll-target="#missing-values-analysis"><span class="header-section-number">4.1</span> Missing values analysis</a></li>
-  <li><a href="#removal-of-duplicated-rows" id="toc-removal-of-duplicated-rows" class="nav-link" data-scroll-target="#removal-of-duplicated-rows"><span class="header-section-number">4.2</span> Removal of duplicated rows</a></li>
-  </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">5</span> Conclusion</a></li>
+  <li><a href="#extreme-delays-outliers-and-temporal-accumulation" id="toc-extreme-delays-outliers-and-temporal-accumulation" class="nav-link" data-scroll-target="#extreme-delays-outliers-and-temporal-accumulation"><span class="header-section-number">5</span> Extreme Delays (Outliers) and Temporal Accumulation</a></li>
+  <li><a href="#correlation-of-extreme-delay-events" id="toc-correlation-of-extreme-delay-events" class="nav-link" data-scroll-target="#correlation-of-extreme-delay-events"><span class="header-section-number">6</span> Correlation of Extreme Delay Events</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">7</span> Conclusion</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/edit/main/qmd/01_data_loading_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/edit/main/qmd/04_temporal_dynamics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -2038,9 +2031,9 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 }
 </script>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Data Loading &amp; Cleaning</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/04_temporal_dynamics.html">Temporal Dynamics</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Data Loading &amp; Cleaning</h1>
+<h1 class="title">Temporal Dynamics</h1>
 </div>
 
 
@@ -2071,192 +2064,59 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>Reliable analysis of flight delays requires clean, consistent, and well-understood data. Before performing any aggregation or modeling, it is essential to inspect the dataset structure and address potential data quality issues such as missing values and duplicated records.</p>
-<p><strong>Scientific aim:</strong> Transform the raw data into a consistent analytical baseline ready for statistical exploration.</p>
-</section>
-<section id="package-loading-and-data-import" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="package-loading-and-data-import"><span class="header-section-number">2</span> Package Loading and Data Import</h2>
-<section id="required-libraries" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="required-libraries"><span class="header-section-number">2.1</span> Required libraries</h3>
+<p>Flight delays are rarely isolated events; they unfold over time and propagate through the network.</p>
+<p>This module moves beyond static aggregates to analyze <strong>temporal dynamics</strong>. We examine how delays evolve daily and monthly, investigating the “snowball effect” where late arriving aircraft trigger a cascade of subsequent delays. By analyzing outliers and correlations, we aim to understand the systemic nature of these disruptions.</p>
 <div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
-<section id="data-import-from-google-drive" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="data-import-from-google-drive"><span class="header-section-number">2.2</span> Data import from Google Drive</h3>
-<p>The dataset is stored remotely on Google Drive and imported directly using a shared access link.</p>
+<section id="monthly-evolution-of-delay-causes" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="monthly-evolution-of-delay-causes"><span class="header-section-number">2</span> Monthly Evolution of Delay Causes</h2>
 <div id="qwebr-insertion-location-2"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Delay causes do not evolve uniformly over time. Some exhibit strong seasonal variability, highlighting differentiated temporal mechanisms.</p>
 </section>
-</section>
-<section id="initial-data-inspection" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="initial-data-inspection"><span class="header-section-number">3</span> Initial Data Inspection</h2>
-<section id="preview-of-the-dataset" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="preview-of-the-dataset"><span class="header-section-number">3.1</span> Preview of the dataset</h3>
+<section id="correlation-analysis-between-delay-causes-spearman" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="correlation-analysis-between-delay-causes-spearman"><span class="header-section-number">3</span> Correlation Analysis Between Delay Causes (Spearman)</h2>
 <div id="qwebr-insertion-location-3"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Carrier-related delays are strongly correlated with late-aircraft delays, suggesting operational propagation effects within airline schedules.</p>
 </section>
-<section id="structure-and-variable-overview" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="structure-and-variable-overview"><span class="header-section-number">3.2</span> Structure and variable overview</h3>
-<p>The glimpse() function provides a concise summary of variable types and overall dataset structure.</p>
+<section id="fine-grained-temporal-analysis" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="fine-grained-temporal-analysis"><span class="header-section-number">4</span> Fine-Grained Temporal Analysis</h2>
+<section id="daily-time-series-of-late-aircraft-delays" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="daily-time-series-of-late-aircraft-delays"><span class="header-section-number">4.1</span> Daily Time Series of Late Aircraft Delays</h3>
 <div id="qwebr-insertion-location-4"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p>Pronounced temporal peaks suggest episodes of systemic disruption rather than isolated events.</p>
 </section>
-<section id="description-of-dataset-variables" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="description-of-dataset-variables"><span class="header-section-number">3.3</span> Description of Dataset Variables</h3>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 66%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Column Name</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>year</code></td>
-<td>Year of the flight</td>
-</tr>
-<tr class="even">
-<td><code>month</code></td>
-<td>Month of the flight (1–12)</td>
-</tr>
-<tr class="odd">
-<td><code>day_of_month</code></td>
-<td>Day of the month</td>
-</tr>
-<tr class="even">
-<td><code>day_of_week</code></td>
-<td>Day of the week (1 = Monday, 7 = Sunday)</td>
-</tr>
-<tr class="odd">
-<td><code>fl_date</code></td>
-<td>Flight date</td>
-</tr>
-<tr class="even">
-<td><code>op_unique_carrier</code></td>
-<td>Unique airline carrier code</td>
-</tr>
-<tr class="odd">
-<td><code>op_carrier_fl_num</code></td>
-<td>Flight number</td>
-</tr>
-<tr class="even">
-<td><code>origin</code></td>
-<td>Departure airport code</td>
-</tr>
-<tr class="odd">
-<td><code>origin_city_name</code></td>
-<td>Departure city</td>
-</tr>
-<tr class="even">
-<td><code>origin_state_nm</code></td>
-<td>Departure state</td>
-</tr>
-<tr class="odd">
-<td><code>dest</code></td>
-<td>Arrival airport code</td>
-</tr>
-<tr class="even">
-<td><code>dest_city_name</code></td>
-<td>Arrival city</td>
-</tr>
-<tr class="odd">
-<td><code>dest_state_nm</code></td>
-<td>Arrival state</td>
-</tr>
-<tr class="even">
-<td><code>crs_dep_time</code></td>
-<td>Scheduled departure time</td>
-</tr>
-<tr class="odd">
-<td><code>dep_time</code></td>
-<td>Actual departure time</td>
-</tr>
-<tr class="even">
-<td><code>dep_delay</code></td>
-<td>Departure delay (minutes)</td>
-</tr>
-<tr class="odd">
-<td><code>taxi_out</code></td>
-<td>Taxi-out time (minutes)</td>
-</tr>
-<tr class="even">
-<td><code>wheels_off</code></td>
-<td>Time when aircraft leaves the ground</td>
-</tr>
-<tr class="odd">
-<td><code>wheels_on</code></td>
-<td>Time when aircraft lands</td>
-</tr>
-<tr class="even">
-<td><code>taxi_in</code></td>
-<td>Taxi-in time (minutes)</td>
-</tr>
-<tr class="odd">
-<td><code>arr_delay</code></td>
-<td>Arrival delay (minutes)</td>
-</tr>
-<tr class="even">
-<td><code>carrier_delay</code></td>
-<td>Delay caused by the airline</td>
-</tr>
-<tr class="odd">
-<td><code>weather_delay</code></td>
-<td>Delay due to weather conditions</td>
-</tr>
-<tr class="even">
-<td><code>nas_delay</code></td>
-<td>Delay caused by air traffic system</td>
-</tr>
-<tr class="odd">
-<td><code>security_delay</code></td>
-<td>Delay due to security issues</td>
-</tr>
-<tr class="even">
-<td><code>late_aircraft_delay</code></td>
-<td>Delay due to late arrival of previous aircraft</td>
-</tr>
-<tr class="odd">
-<td><code>cancelled</code></td>
-<td>Cancellation indicator (1 = cancelled, 0 = not cancelled)</td>
-</tr>
-<tr class="even">
-<td><code>diverted</code></td>
-<td>Diversion indicator (1 = diverted, 0 = not diverted)</td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="data-cleaning" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="data-cleaning"><span class="header-section-number">4</span> Data Cleaning</h2>
-<section id="missing-values-analysis" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="missing-values-analysis"><span class="header-section-number">4.1</span> Missing values analysis</h3>
-<p>Before deciding on imputation or filtering strategies, the number of missing values per variable is computed.</p>
+<section id="daily-zoom-january-case-study" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="daily-zoom-january-case-study"><span class="header-section-number">4.2</span> Daily Zoom: January Case Study</h3>
 <div id="qwebr-insertion-location-5"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
-<p><strong>Interpretation:</strong> This step allows identification of variables that may require special treatment during subsequent analyses.</p>
+<p>Daily analysis reveals short but intense disruption episodes, invisible at monthly scale.</p>
 </section>
-<section id="removal-of-duplicated-rows" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="removal-of-duplicated-rows"><span class="header-section-number">4.2</span> Removal of duplicated rows</h3>
-<p>Duplicated observations can bias statistical results and must be removed.</p>
+</section>
+<section id="extreme-delays-outliers-and-temporal-accumulation" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="extreme-delays-outliers-and-temporal-accumulation"><span class="header-section-number">5</span> Extreme Delays (Outliers) and Temporal Accumulation</h2>
 <div id="qwebr-insertion-location-6"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
+<section id="correlation-of-extreme-delay-events" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="correlation-of-extreme-delay-events"><span class="header-section-number">6</span> Correlation of Extreme Delay Events</h2>
+<div id="qwebr-insertion-location-7"></div>
+<noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
+<p><strong>Interpretation and Operational Insights</strong> Propagation of internal delays Outliers associated with late_aircraft_delay and carrier_delay frequently occur together, highlighting cascading effects within airline operations.</p>
+<p>Exogenous disruptions Weather, NAS, and security-related outliers appear isolated and weakly correlated, confirming their exceptional and largely independent nature.</p>
 </section>
-<section id="conclusion" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">5</span> Conclusion</h2>
-<p>This first preprocessing phase ensures that the dataset:</p>
+<section id="conclusion" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">7</span> Conclusion</h2>
+<p>Our temporal analysis confirms that flight delays are dynamic processes with strong propagation effects:</p>
 <ul>
-<li><p>Is correctly imported and readable</p></li>
-<li><p>Has a clearly identified structure</p></li>
-<li><p>Is free from duplicated records</p></li>
-<li><p>Has documented missing values</p></li>
+<li><strong>Cascading Failures</strong>: The strong correlation between late aircraft occurrences and carrier delays highlights the systemic nature of disruptions.</li>
+<li><strong>Bursts of Disruption</strong>: Daily analysis reveals that delays often come in intense “waves” rather than a steady trickle.</li>
+<li><strong>Systemic vs.&nbsp;Isolated</strong>: Internal delays propagate, while weather events act as isolated shocks.</li>
 </ul>
-<p>These steps form a robust foundation for further exploratory analysis, aggregation of delays, and modeling of contributing factors.</p>
+<p>Identification of these propagation mechanisms provides critical context for the airline-specific performance variability we will examine in the final module.</p>
 
 
 </section>
@@ -2663,7 +2523,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   });
   </script>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/edit/main/qmd/01_data_loading_cleaning.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script type="module">
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/edit/main/qmd/04_temporal_dynamics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script type="module">
 // Handle cell initialization initialization
 qwebrCellDetails.map(
   (entry) => {

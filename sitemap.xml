@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://helabhl.github.io/project_R/qmd/presentation.html</loc>
-    <lastmod>2026-01-06T12:07:45.404Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/qmd/presentation.html</loc>
+    <lastmod>2026-01-06T20:17:50.429Z</lastmod>
   </url>
   <url>
-    <loc>https://helabhl.github.io/project_R/qmd/04_temporal_dynamics_and_propagation.html</loc>
-    <lastmod>2026-01-05T19:15:50.791Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/qmd/04_temporal_dynamics.html</loc>
+    <lastmod>2026-01-06T23:40:05.766Z</lastmod>
   </url>
   <url>
-    <loc>https://helabhl.github.io/project_R/qmd/02_descriptive_analysis_delays.html</loc>
-    <lastmod>2026-01-05T19:15:30.124Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/qmd/02_descriptive_statistics.html</loc>
+    <lastmod>2026-01-06T23:39:57.945Z</lastmod>
   </url>
   <url>
-    <loc>https://helabhl.github.io/project_R/index.html</loc>
-    <lastmod>2026-01-06T12:40:53.766Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/index.html</loc>
+    <lastmod>2026-01-07T00:18:58.211Z</lastmod>
   </url>
   <url>
-    <loc>https://helabhl.github.io/project_R/qmd/01_data_loading_cleaning.html</loc>
-    <lastmod>2026-01-05T19:15:22.824Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/qmd/01_data_loading_cleaning.html</loc>
+    <lastmod>2026-01-07T00:07:33.368Z</lastmod>
   </url>
   <url>
-    <loc>https://helabhl.github.io/project_R/qmd/03_causes_and_seasonality.html</loc>
-    <lastmod>2026-01-05T19:15:40.879Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/qmd/03_causes_and_seasonality.html</loc>
+    <lastmod>2026-01-06T23:40:01.922Z</lastmod>
   </url>
   <url>
-    <loc>https://helabhl.github.io/project_R/qmd/05_airline_level_analysis.html</loc>
-    <lastmod>2026-01-06T12:25:52.935Z</lastmod>
+    <loc>https://helabhl.github.io/Flight-Delays-Analysis/qmd/05_airline_performance.html</loc>
+    <lastmod>2026-01-07T00:13:00.139Z</lastmod>
   </url>
 </urlset>

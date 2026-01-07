@@ -9,7 +9,7 @@
 <meta name="author" content="Hela Bouhlel">
 <meta name="dcterms.date" content="2025-12-28">
 
-<title>Causes, Seasonality and Explanatory Factors – R Project - Flight Delays Analysis</title>
+<title>Causes &amp; Seasonality – R Project - Flight Delays Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -370,7 +370,7 @@ globalThis.qwebrCustomizedWebROptions = {
 };
 
 // Store cell data
-globalThis.qwebrCellDetails = [{"code":"url <- \"https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv\"\ndf <- read.csv(url)","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(tidyr)\n\ncause_totals <- df %>%\nsummarise(\ncarrier_delay = sum(carrier_delay, na.rm = TRUE),\nweather_delay = sum(weather_delay, na.rm = TRUE),\nnas_delay = sum(nas_delay, na.rm = TRUE),\nsecurity_delay = sum(security_delay, na.rm = TRUE),\nlate_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE)\n) %>%\npivot_longer(\neverything(),\nnames_to = \"cause\",\nvalues_to = \"minutes\"\n) %>%\nmutate(share = minutes / sum(minutes))\n\ncause_totals","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ggplot(cause_totals,\naes(x = reorder(cause, minutes), y = minutes)) +\ngeom_col(fill = \"tomato\") +\ncoord_flip() +\nlabs(\ntitle = \"Total Delay Minutes by Cause\",\nx = \"Cause\",\ny = \"Delay minutes\"\n)","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"internal_external <- df %>%\nsummarise(\ninternal = sum(carrier_delay + security_delay, na.rm = TRUE),\nexternal = sum(weather_delay + nas_delay + late_aircraft_delay, na.rm = TRUE)\n)\n\ninternal_external","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"monthly_flights <- df %>%\ngroup_by(month) %>%\nsummarise(total_flights = n())\n\nggplot(monthly_flights,\naes(x = factor(month), y = total_flights)) +\ngeom_col(fill = \"lightblue\") +\nlabs(\ntitle = \"Number of Arrived Flights per Month\",\nx = \"Month\",\ny = \"Number of flights\"\n) +\ntheme_minimal()","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"df_clean <- df %>%\nmutate(\ndelay_category = case_when(\narr_delay <= 0 ~ \"On time or early\",\narr_delay < 15 ~ \"Delay < 15 min\",\narr_delay >= 15 ~ \"Delay ≥ 15 min\"\n)\n)\n\nmonthly_delay_dist <- df_clean %>%\ngroup_by(month, delay_category) %>%\nsummarise(n_flights = n(), .groups = \"drop\")","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ggplot(monthly_delay_dist,\naes(x = factor(month),\ny = n_flights,\nfill = delay_category)) +\ngeom_bar(stat = \"identity\") +\nlabs(\ntitle = \"Monthly Distribution of Flights by Delay Category\",\nx = \"Month\",\ny = \"Number of flights\",\nfill = \"Delay category\"\n) +\ntheme_minimal()","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"monthly_delay_prop <- monthly_delay_dist %>%\ngroup_by(month) %>%\nmutate(prop = n_flights / sum(n_flights))\n\nggplot(monthly_delay_prop,\naes(x = factor(month),\ny = prop,\nfill = delay_category)) +\ngeom_bar(stat = \"identity\", position = \"fill\") +\nscale_y_continuous(labels = scales::percent) +\nlabs(\ntitle = \"Monthly Proportion of Delay Categories\",\nx = \"Month\",\ny = \"Proportion\",\nfill = \"Delay category\"\n) +\ntheme_minimal()","id":8,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"kruskal.test(arr_delay ~ factor(month), data = df_clean)","id":9,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"monthly_volume_delay <- df_clean %>%\ngroup_by(month) %>%\nsummarise(\ntotal_flights = n(),\nmean_delay = mean(arr_delay, na.rm = TRUE)\n)\n\ncor.test(\nmonthly_volume_delay$total_flights,\nmonthly_volume_delay$mean_delay,\nmethod = \"spearman\"\n)","id":10,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-10","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
+globalThis.qwebrCellDetails = [{"code":"url <- \"https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv\"\ndf <- read.csv(url)\ndf <- df %>%\nfilter(cancelled == 0,diverted == 0,\n!is.na(arr_delay))","id":1,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-1","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"library(tidyr)\n\ncause_totals <- df %>%\nsummarise(\ncarrier_delay = sum(carrier_delay, na.rm = TRUE),\nweather_delay = sum(weather_delay, na.rm = TRUE),\nnas_delay = sum(nas_delay, na.rm = TRUE),\nsecurity_delay = sum(security_delay, na.rm = TRUE),\nlate_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE)\n) %>%\npivot_longer(\neverything(),\nnames_to = \"cause\",\nvalues_to = \"minutes\"\n) %>%\nmutate(share = minutes / sum(minutes))\n\ncause_totals","id":2,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-2","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ggplot(cause_totals,\naes(x = reorder(cause, minutes), y = minutes)) +\ngeom_col(fill = \"tomato\") +\ncoord_flip() +\nlabs(\ntitle = \"Total Delay Minutes by Cause\",\nx = \"Cause\",\ny = \"Delay minutes\"\n)","id":3,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-3","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"internal_external <- df %>%\nsummarise(\ninternal = sum(carrier_delay + security_delay, na.rm = TRUE),\nexternal = sum(weather_delay + nas_delay + late_aircraft_delay, na.rm = TRUE)\n)\n\ninternal_external\ninternal_external_long <- internal_external %>%\n  pivot_longer(cols = everything(), names_to = \"type\", values_to = \"delay\")\n\nggplot(internal_external_long, aes(x = type, y = delay, fill = type)) +\n  geom_bar(stat = \"identity\") +\n  labs(title = \"Retards internes vs externes\",\n       x = \"Type de retard\",\n       y = \"Somme des minutes de retard\") +\n  theme_minimal() +\n  scale_fill_brewer(palette = \"Set2\")","id":4,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-4","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"monthly_flights <- df %>%\ngroup_by(month) %>%\nsummarise(total_flights = n())\n\nggplot(monthly_flights,\naes(x = factor(month), y = total_flights)) +\ngeom_col(fill = \"lightblue\") +\nlabs(\ntitle = \"Number of Arrived Flights per Month\",\nx = \"Month\",\ny = \"Number of flights\"\n) +\ntheme_minimal()","id":5,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-5","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"df_clean <- df %>%\nmutate(\ndelay_category = case_when(\narr_delay <= 0 ~ \"On time or early\",\narr_delay < 15 ~ \"Delay < 15 min\",\narr_delay >= 15 ~ \"Delay ≥ 15 min\"\n)\n)\n\nmonthly_delay_dist <- df_clean %>%\ngroup_by(month, delay_category) %>%\nsummarise(n_flights = n(), .groups = \"drop\")","id":6,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-6","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"ggplot(monthly_delay_dist,\naes(x = factor(month),\ny = n_flights,\nfill = delay_category)) +\ngeom_bar(stat = \"identity\") +\nlabs(\ntitle = \"Monthly Distribution of Flights by Delay Category\",\nx = \"Month\",\ny = \"Number of flights\",\nfill = \"Delay category\"\n) +\ntheme_minimal()","id":7,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-7","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"monthly_delay_prop <- monthly_delay_dist %>%\ngroup_by(month) %>%\nmutate(prop = n_flights / sum(n_flights))\n\nggplot(monthly_delay_prop,\naes(x = factor(month),\ny = prop,\nfill = delay_category)) +\ngeom_bar(stat = \"identity\", position = \"fill\") +\nscale_y_continuous(labels = scales::percent) +\nlabs(\ntitle = \"Monthly Proportion of Delay Categories\",\nx = \"Month\",\ny = \"Proportion\",\nfill = \"Delay category\"\n) +\ntheme_minimal()","id":8,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-8","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"kruskal.test(arr_delay ~ factor(month), data = df_clean)","id":9,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-9","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}},{"code":"monthly_volume_delay <- df_clean %>%\ngroup_by(month) %>%\nsummarise(\ntotal_flights = n(),\nmean_delay = mean(arr_delay, na.rm = TRUE)\n)\n\ncor.test(\nmonthly_volume_delay$total_flights,\nmonthly_volume_delay$mean_delay,\nmethod = \"spearman\"\n)","id":10,"options":{"autorun":"false","classes":"","comment":"","context":"interactive","dpi":72,"editor-font-scale":"1","editor-max-height":"","editor-quick-suggestions":"false","editor-word-wrap":"true","fig-cap":"","fig-height":5,"fig-width":7,"label":"unnamed-chunk-10","message":"true","out-height":"","out-width":"700px","output":"true","read-only":"false","results":"markup","warning":"true"}}];
 
 </script>
 <script type="module">
@@ -1637,7 +1637,7 @@ globalThis.qwebrExecuteCode = async function (
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/03_causes_and_seasonality.html">Causes, Seasonality and Explanatory Factors</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/03_causes_and_seasonality.html">Causes &amp; Seasonality</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -1674,31 +1674,31 @@ globalThis.qwebrExecuteCode = async function (
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmd/01_data_loading_cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Loading and Cleaning</span></a>
+ <span class="menu-text">Data Loading &amp; Cleaning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../qmd/02_descriptive_analysis_delays.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Descriptive Statistics and Delay Severity</span></a>
+  <a href="../qmd/02_descriptive_statistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Descriptive Statistics</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../qmd/03_causes_and_seasonality.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Causes, Seasonality and Explanatory Factors</span></a>
+ <span class="menu-text">Causes &amp; Seasonality</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../qmd/04_temporal_dynamics_and_propagation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Temporal Dynamics and Propagation Effects</span></a>
+  <a href="../qmd/04_temporal_dynamics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Temporal Dynamics</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../qmd/05_airline_level_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Airline-Level Performance and Heterogeneity</span></a>
+  <a href="../qmd/05_airline_performance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Airline Performance</span></a>
   </div>
 </li>
       </ul>
@@ -1741,7 +1741,7 @@ globalThis.qwebrExecuteCode = async function (
   <li><a href="#flight-volume-vs-delay-severity-spearman-correlation" id="toc-flight-volume-vs-delay-severity-spearman-correlation" class="nav-link" data-scroll-target="#flight-volume-vs-delay-severity-spearman-correlation"><span class="header-section-number">9</span> Flight Volume vs Delay Severity (Spearman Correlation)</a></li>
   <li><a href="#general-conclusion" id="toc-general-conclusion" class="nav-link" data-scroll-target="#general-conclusion"><span class="header-section-number">10</span> General Conclusion</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/helabhl/project_R/edit/main/qmd/03_causes_and_seasonality.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/project_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/edit/main/qmd/03_causes_and_seasonality.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -2030,9 +2030,9 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 }
 </script>
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/03_causes_and_seasonality.html">Causes, Seasonality and Explanatory Factors</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../qmd/01_data_loading_cleaning.html">Project</a></li><li class="breadcrumb-item"><a href="../qmd/03_causes_and_seasonality.html">Causes &amp; Seasonality</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Causes, Seasonality and Explanatory Factors</h1>
+<h1 class="title">Causes &amp; Seasonality</h1>
 </div>
 
 
@@ -2063,7 +2063,8 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>This section investigates the underlying causes of delays and their temporal variability. The objective is to identify dominant delay drivers and assess whether delays exhibit seasonal patterns.</p>
+<p>Understanding the magnitude of delays is not enough; we must identify their drivers.</p>
+<p>This section explores the causal factors behind flight disruptions, comparing internal operational issues against external forces like weather. Furthermore, we investigate seasonality to determine if delays follow a predictable temporal rhythm throughout the year, identifying critical periods of high disruption.</p>
 <div id="qwebr-insertion-location-1"></div>
 <noscript>Please enable JavaScript to experience the dynamic code cell content on this page.</noscript>
 </section>
@@ -2162,13 +2163,13 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
 </section>
 <section id="general-conclusion" class="level2" data-number="10">
 <h2 data-number="10" class="anchored" data-anchor-id="general-conclusion"><span class="header-section-number">10</span> General Conclusion</h2>
-<p>This section demonstrates that:</p>
+<p>The evidence points to a clear hierarchy of causes and distinct temporal patterns:</p>
 <ul>
-<li><p>Delay causes are predominantly internal and operational</p></li>
-<li><p>Delays exhibit a seasonal variability</p></li>
-<li><p>Traffic volume alone does not explain delay severity</p></li>
+<li><strong>Internal Dominance</strong>: Operational factors (Carrier abuse) and late aircraft arrivals significantly outweigh weather-related disruptions.</li>
+<li><strong>Seasonal Rhythm</strong>: Delays are not static; they exhibit significant monthly variations, likely driven by demand peaks.</li>
+<li><strong>Traffic Impact</strong>: While higher volume correlates with delays, it is not the sole predictor.</li>
 </ul>
-<p>These findings provide a strong foundation for predictive modeling or clustering analyses in subsequent work.</p>
+<p>This suggests that improvement strategies should focus on carrier operations and network resilience rather than purely exogenous factors. We will now deepen this by looking at how these delays propagate over time.</p>
 
 
 </section>
@@ -2247,7 +2248,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/helabhl\.github\.io\/project_R\/");
+        var filterRegex = new RegExp("https:\/\/helabhl\.github\.io\/Flight-Delays-Analysis\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -2575,7 +2576,7 @@ globalThis.qwebrCreateMonacoEditorInstance = function (cellData) {
   });
   </script>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/helabhl/project_R/edit/main/qmd/03_causes_and_seasonality.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/project_R/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script type="module">
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/edit/main/qmd/03_causes_and_seasonality.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/helabhl/Flight-Delays-Analysis/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script type="module">
 // Handle cell initialization initialization
 qwebrCellDetails.map(
   (entry) => {

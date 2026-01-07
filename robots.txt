@@ -1,1 +1,1 @@
-Sitemap: https://helabhl.github.io/project_R/sitemap.xml
+Sitemap: https://helabhl.github.io/Flight-Delays-Analysis/sitemap.xml
