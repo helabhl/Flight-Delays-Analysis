@@ -1,5 +1,5 @@
 ---
-title: "Causes, Seasonality and Explanatory Factors"
+title: "Causes & Seasonality"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:
@@ -15,12 +15,16 @@ filters:
   - webr
 ---
 ## Introduction
-This section investigates the underlying causes of delays and their temporal variability.
-The objective is to identify dominant delay drivers and assess whether delays exhibit
-seasonal patterns.
+
+Understanding the magnitude of delays is not enough; we must identify their drivers. 
+
+This section explores the causal factors behind flight disruptions, comparing internal operational issues against external forces like weather. Furthermore, we investigate seasonality to determine if delays follow a predictable temporal rhythm throughout the year, identifying critical periods of high disruption.
 ```{webr-r}
 url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
 df <- read.csv(url)
+df <- df %>%
+filter(cancelled == 0,diverted == 0,
+!is.na(arr_delay))
 ```
 ## Total Delay Minutes by Cause
 ```{webr-r}
@@ -71,6 +75,17 @@ external = sum(weather_delay + nas_delay + late_aircraft_delay, na.rm = TRUE)
 )
 
 internal_external
+internal_external_long <- internal_external %>%
+  pivot_longer(cols = everything(), names_to = "type", values_to = "delay")
+
+ggplot(internal_external_long, aes(x = type, y = delay, fill = type)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Retards internes vs externes",
+       x = "Type de retard",
+       y = "Somme des minutes de retard") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2")
+
 ```
 While external factors contribute significantly, internal causes remain a major lever
 for performance improvement by airlines.
@@ -248,14 +263,12 @@ In other words:
 * It is not the dominant factor
 
 ## General Conclusion
-This section demonstrates that:
 
-* Delay causes are predominantly internal and operational
+The evidence points to a clear hierarchy of causes and distinct temporal patterns:
 
-* Delays exhibit a seasonal variability
+*   **Internal Dominance**: Operational factors (Carrier abuse) and late aircraft arrivals significantly outweigh weather-related disruptions.
+*   **Seasonal Rhythm**: Delays are not static; they exhibit significant monthly variations, likely driven by demand peaks.
+*   **Traffic Impact**: While higher volume correlates with delays, it is not the sole predictor.
 
-* Traffic volume alone does not explain delay severity
-
-These findings provide a strong foundation for predictive modeling or clustering analyses
-in subsequent work.
+This suggests that improvement strategies should focus on carrier operations and network resilience rather than purely exogenous factors. We will now deepen this by looking at how these delays propagate over time.
 

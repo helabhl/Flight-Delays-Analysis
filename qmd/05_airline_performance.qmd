@@ -1,5 +1,5 @@
 ---
-title: "Airline-Level Performance and Heterogeneity"
+title: "Airline Performance"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:
@@ -15,10 +15,10 @@ filters:
   - webr
 ---
 ## Introduction
-Flight delays may vary substantially across airlines due to differences in
-fleet size, operational strategies, network structure, and exposure to congestion.
-This section investigates airline-level heterogeneity in delay performance,
-focusing on distributional properties, severity indicators, and delay causes.
+
+Do all airlines perform equally under similar conditions? 
+
+This final analytical section investigates the heterogeneity of **airline performance**. We compare carriers based on their punctuality metrics and delay profiles to determine if specific airlines consistently outperform others, controlling for the natural variability of the aviation network. This comparison highlights the role of management strategy in delay mitigation.
 
 ```{webr-r}
 url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
@@ -167,13 +167,11 @@ Future analyses could incorporate weighted comparisons or
 minimum flight thresholds to strengthen robustness.
 
 ## Conclusion
-This airline-level analysis highlights substantial heterogeneity in delay performance:
 
-* Significant differences in delay severity and frequency
+We have uncovered significant performance disparities across airlines, even when operating within the same global environment.
 
-* Distinct causal profiles across airlines
+*   **Heterogeneity**: Punctuality is not uniform; some airlines consistently avoid severe delays better than others.
+*   **Operational Control**: The variability in "Carrier Delay" suggests that operational efficiency—fleet management, scheduling, and recovery protocols—plays a decisive role.
+*   **Strategic Levers**: Airlines have agency. The data suggests that specific strategies can effectively mitigate the impact of network-wide pressures.
 
-* Evidence of internal delay propagation mechanisms
-
-These findings emphasize the importance of airline-specific strategies
-in mitigating flight delays and improving punctuality.
+This validates the hypothesis that airline-specific strategies are a key lever for improving overall system punctuality.

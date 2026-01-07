@@ -1,5 +1,5 @@
 ---
-title: "Temporal Dynamics and Propagation Effects"
+title: "Temporal Dynamics"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:
@@ -15,17 +15,10 @@ filters:
   - webr
 ---
 ## Introduction
-Beyond aggregate statistics, understanding flight delays requires analyzing their
-temporal evolution and interdependencies.
-This section focuses on:
 
-* Monthly dynamics of delay causes
+Flight delays are rarely isolated events; they unfold over time and propagate through the network. 
 
-* Correlations between delay types
-
-* Fine-grained temporal patterns
-
-* Extreme delays and their propagation mechanisms
+This module moves beyond static aggregates to analyze **temporal dynamics**. We examine how delays evolve daily and monthly, investigating the "snowball effect" where late arriving aircraft trigger a cascade of subsequent delays. By analyzing outliers and correlations, we aim to understand the systemic nature of these disruptions.
 
 
 ```{webr-r}
@@ -238,14 +231,12 @@ confirming their exceptional and largely independent nature.
 
 
 ## Conclusion
-This temporal analysis demonstrates that flight delays are not random events but exhibit:
 
-* Strong temporal clustering
+Our temporal analysis confirms that flight delays are dynamic processes with strong propagation effects:
 
-* Clear propagation mechanisms
+*   **Cascading Failures**: The strong correlation between late aircraft occurrences and carrier delays highlights the systemic nature of disruptions.
+*   **Bursts of Disruption**: Daily analysis reveals that delays often come in intense "waves" rather than a steady trickle.
+*   **Systemic vs. Isolated**: Internal delays propagate, while weather events act as isolated shocks.
 
-* Distinct behaviors between internal and external causes
-
-These insights are essential for robust delay mitigation strategies and pave the way
-for predictive or causal modeling approaches.
+Identification of these propagation mechanisms provides critical context for the airline-specific performance variability we will examine in the final module.
 

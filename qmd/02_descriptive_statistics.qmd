@@ -1,5 +1,5 @@
 ---
-title: "Descriptive Statistics and Delay Severity"
+title: "Descriptive Statistics"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:
@@ -15,10 +15,10 @@ filters:
   - webr
 ---
 ## Introduction
-This section provides a descriptive overview of flight delays, focusing on cancellation rates,
-delay severity, and distributional properties of arrival delays.
-The objective is to quantify the magnitude of delays and identify structural characteristics
-such as asymmetry and extreme values.
+
+With a clean dataset in hand, we now turn to the fundamental question: *What is the scale of the problem?*
+
+This section characterizes flight delays in 2024 using descriptive statistics. We aim to quantify delay frequency, distinguishing between minor disruptions and significant operational failures (>15 minutes), and examine the distributional properties that complicate statistical modeling.
 
 ```{webr-r}
 url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/heads/main/qmd/data/flight_2024.csv"
@@ -131,7 +131,7 @@ y = "Number of flights"
 ```{webr-r}
 
 boxplot(
-df_clean$arr_delay,
+df$arr_delay,
 main = "Boxplot of Arrival Delays",
 ylab = "Delay (minutes)"
 )
@@ -158,12 +158,11 @@ Early departures may reflect operational strategies aimed at absorbing anticipat
 or systematic overestimation of taxi times.
 
 ## Conclusion
-This descriptive analysis reveals that flight delays are characterized by:
 
-* Strong asymmetry and heavy tails
+Our descriptive analysis reveals that while most flights arrive on time, the system is characterized by significantly skewed performance:
 
-* A non-negligible proportion of severe delays
+*   **Asymmetry**: The distribution of delays is heavily right-skewed, driven by a minority of severe events.
+*   **Severity**: A meaningful proportion of flights suffer from "significant delays" (>15 min), which disrupt the schedule.
+*   **Impact**: Average delay statistics are heavily influenced by these extreme outliers.
 
-* The presence of extreme events driving average performance
-
-* These findings motivate further investigation into causal factors and temporal patterns.
+Having established *how much* delay exists, our next step is to investigate *why* and *when* these delays occur in the **Causes & Seasonality** module.

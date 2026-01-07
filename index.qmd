@@ -12,13 +12,13 @@ The analysis is divided into the following sections:
 
 1.  [**Data Loading & Cleaning**](qmd/01_data_loading_cleaning.qmd)
     *   Processing raw data and handling missing values.
-2.  [**Descriptive Statistics**](qmd/02_descriptive_analysis_delays.qmd)
+2.  [**Descriptive Statistics**](qmd/02_descriptive_statistics.qmd)
     *   Overview of delay distributions and severity.
 3.  [**Causes & Seasonality**](qmd/03_causes_and_seasonality.qmd)
     *   Investigating why delays happen and when they occur.
-4.  [**Temporal Dynamics**](qmd/04_temporal_dynamics_and_propagation.qmd)
+4.  [**Temporal Dynamics**](qmd/04_temporal_dynamics.qmd)
     *   Analyzing propagation effects and evolution over time.
-5.  [**Airline Analysis**](qmd/05_airline_level_analysis.qmd)
+5.  [**Airline Analysis**](qmd/05_airline_performance.qmd)
     *   Comparative performance of different airlines.
 
 ## Related Resources

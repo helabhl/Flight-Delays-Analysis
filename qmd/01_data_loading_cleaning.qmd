@@ -1,5 +1,5 @@
 ---
-title: "Data Loading and Cleaning"
+title: "Data Loading & Cleaning"
 author: "Hela Bouhlel"
 date: "2025-12-28"
 format:
@@ -22,8 +22,7 @@ Before performing any aggregation or modeling, it is essential to inspect the da
 and address potential data quality issues such as missing values and duplicated records.
 
 **Scientific aim:**
-Prepare the flight delay dataset for exploratory and statistical analysis by ensuring data integrity
-and consistency.
+Transform the raw data into a consistent analytical baseline ready for statistical exploration.
 
 ## Package Loading and Data Import
 ###  Required libraries

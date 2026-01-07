@@ -7,8 +7,8 @@ project:
 
 website:
   title: "R Project - Flight Delays Analysis"
-  site-url: "https://helabhl.github.io/project_R/"
-  repo-url: "https://github.com/helabhl/project_R"
+  site-url: "https://helabhl.github.io/Flight-Delays-Analysis/"
+  repo-url: "https://github.com/helabhl/Flight-Delays-Analysis"
   
   repo-actions: [edit, issue]
   sidebar:
@@ -18,10 +18,10 @@ website:
       - section: Project
         contents:
           - qmd/01_data_loading_cleaning.qmd
-          - qmd/02_descriptive_analysis_delays.qmd
+          - qmd/02_descriptive_statistics.qmd
           - qmd/03_causes_and_seasonality.qmd
-          - qmd/04_temporal_dynamics_and_propagation.qmd
-          - qmd/05_airline_level_analysis.qmd
+          - qmd/04_temporal_dynamics.qmd
+          - qmd/05_airline_performance.qmd
       - section: Presentation
         contents:
           - qmd/presentation.qmd

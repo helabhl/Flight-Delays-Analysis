@@ -20,6 +20,12 @@ filters:
   - Temporal Dynamics
   - Airline Performance
 
+## Problématique
+
+- **Impact Économique** : Les retards coûtent environ **30 milliards de dollars par an** à l'industrie mondiale (Source : IATA).
+- **Situation Critique (2024)** : En Europe, les retards de gestion du trafic ont atteint un coût de **2,8 milliards d'euros**, avec une ponctualité chutant à 72% (Source : Eurocontrol).
+- **Enjeu** : Face à la saturation des infrastructures et aux pénuries, comment restaurer l'efficacité opérationnelle et la rentabilité ?
+
 ```{webr-r}
 #| context: setup
 #| include: false
@@ -27,68 +33,143 @@ url <- "https://raw.githubusercontent.com/helabhl/Flight-Delays-Analysis/refs/he
 df <- read.csv(url)
 ```
 
-## The State of Delays
+## Méthodologie et Questions de Recherche
 
-- **Skewed Distribution**: Most flights are on time, but the "long tail" of delays is significant.
-- **Severity**: Over **15%** of flights experience delays > 15 minutes.
-- **Impact**: Average delay is driven heavily by extreme outliers rather than typical performance.
+| Axe | Question | Analyse |
+|-----|----------|---------|
+| **Ampleur** | Les retards sont-ils fréquents/sévères ? | % Retards, Distribution |
+| **Compagnies** | Disparités et impact du volume ? | Boxplots, Corrélation |
+| **Temps** | Saisonnalité marquée ? | Moyenne mensuelle |
+| **Causes** | Internes vs Externes ? | Répartition par cause |
+| **Dynamique** | Annulations et Effet Cascade ? | Corrélations |
 
-## Why Do Delays Happen?
+## 1. Fréquence et Sévérité
 
-- **Late Aircraft**: The dominant cause, indicating strong **network propagation**.
-- **Carrier Ops**: Internal issues (crew, maintenance) are the second largest factor.
-- **External Factors**: Weather and NAS play a smaller role than operational issues.
+> **Q : Les retards sont-ils une minorité ou la norme ?**
+
+- Analyse : Part des vols retardés (>15 min) et distribution des délais.
 
 ```{webr-r}
 #| fig-height: 4
 library(dplyr)
-library(tidyr)
 library(ggplot2)
 
-cause_totals <- df %>%
+# Global stats
+stats <- df %>%
   summarise(
-    carrier_delay = sum(carrier_delay, na.rm = TRUE),
-    weather_delay = sum(weather_delay, na.rm = TRUE),
-    nas_delay = sum(nas_delay, na.rm = TRUE),
-    security_delay = sum(security_delay, na.rm = TRUE),
-    late_aircraft_delay = sum(late_aircraft_delay, na.rm = TRUE)
-  ) %>%
-  pivot_longer(everything(), names_to = "cause", values_to = "minutes")
+    Total = sum(arr_flights, na.rm = TRUE),
+    Delayed = sum(arr_del15, na.rm = TRUE),
+    Pct_Delay = Delayed / Total,
+    Avg_Delay = sum(arr_delay, na.rm = TRUE) / Total
+  )
 
-ggplot(cause_totals, aes(x = reorder(cause, minutes), y = minutes)) +
-  geom_col(fill = "tomato") +
-  coord_flip() +
-  labs(title = "Total Delay Minutes by Cause", x = "Cause", y = "Minutes") +
-  theme_minimal()
+# Bar chart
+vals <- data.frame(
+  Etat = c("A l'heure", "Retard (>15m)"),
+  Count = c(stats$Total - stats$Delayed, stats$Delayed)
+)
+
+ggplot(vals, aes(x = "", y = Count, fill = Etat)) +
+  geom_col() + coord_polar(theta = "y") +
+  theme_void() + scale_fill_manual(values = c("steelblue", "tomato")) +
+  labs(title = paste0("Taux de Retard : ", round(stats$Pct_Delay * 100, 1), "%"))
 ```
 
-## Seasonality & Time
+## 2. Performance des Compagnies
 
-- **Seasonal Peaks**: Delays spike in **Summer (July)** and **Fall (October)**.
-- **Traffic Impact**: Higher daily flight volumes correlate with longer delays.
-- **Temporal Clustering**: Delays happen in **episodes**, not randomly.
+> **Q : Toutes les compagnies sont-elles égales face aux retards ?**
+
+- Analyse : Comparaison des distributions de retard moyen par vol.
 
 ```{webr-r}
 #| fig-height: 4
-monthly_flights <- df %>%
-  filter(arr_delay > 0) %>%
-  group_by(month) %>%
-  summarise(mean_delay = mean(arr_delay, na.rm = TRUE))
+df_carrier <- df %>%
+  filter(arr_flights > 0) %>%
+  mutate(avg_delay_flight = arr_delay / arr_flights)
 
-ggplot(monthly_flights, aes(x = factor(month), y = mean_delay)) +
-  geom_col(fill = "steelblue") +
-  labs(title = "Average Delay by Month", x = "Month", y = "Avg Delay (min)") +
+ggplot(df_carrier, aes(x = reorder(carrier_name, avg_delay_flight, FUN=median), y = avg_delay_flight)) +
+  geom_boxplot(outlier.shape = NA, fill = "lightblue") +
+  coord_flip(ylim = c(0, 40)) +
+  labs(title = "Dispersion du Retard Moyen par Compagnie", x = "", y = "Minutes de retard par vol") +
   theme_minimal()
 ```
 
-## Airline Performance
+## Volume vs Performance
 
-- **Heterogeneity**: Performance varies extensively between airlines.
-- **Propagation Vulnerability**: Some carriers are more susceptible to cascading "Late Aircraft" delays.
-- **Strategy**: Addressing internal inefficiencies is the most direct path to improvement.
+> **Q : Le volume de vols influence-t-il la régularité ?**
 
-## Conclusion
+```{webr-r}
+#| fig-height: 4
+vol_stats <- df %>%
+  group_by(carrier_name) %>%
+  summarise(
+    Vol_Total = sum(arr_flights, na.rm = TRUE),
+    Retard_Moyen = sum(arr_delay, na.rm=TRUE) / sum(arr_flights, na.rm=TRUE)
+  )
 
-- **Main Driver**: Operational cascading (Late Aircraft) is the primary engine of delays.
-- **Key Factor**: Seasonality and traffic volume act as amplifiers.
-- **Takeaway**: Reducing initial internal delays is crucial to stopping the network propagation effects.
+ggplot(vol_stats, aes(x = Vol_Total, y = Retard_Moyen, label = carrier_name)) +
+  geom_point(color = "darkred", size = 3) +
+  theme_minimal() +
+  labs(title = "Volume vs Retard Moyen", x = "Nombre de Vols", y = "Retard Moyen")
+```
+
+## 3. Saisonnalité et Aéroports
+
+> **Q : Quand et où les retards surviennent-ils ?**
+
+```{webr-r}
+#| fig-height: 3.5
+monthly <- df %>%
+  group_by(month) %>%
+  summarise(Avg_Delay = sum(arr_delay, na.rm=TRUE) / sum(arr_flights, na.rm=TRUE))
+
+ggplot(monthly, aes(x = factor(month), y = Avg_Delay)) +
+  geom_col(fill = "orange") +
+  labs(title = "Saisonnalité : Retard Moyen par Mois", x = "Mois", y = "Retard (min)") +
+  theme_minimal()
+```
+
+## 4. Causes des Retards
+
+> **Q : Quelles sont les causes dominantes ?**
+
+```{webr-r}
+#| fig-height: 4
+library(tidyr)
+causes <- df %>%
+  summarise(
+    Carrier = sum(carrier_delay, na.rm=TRUE),
+    Weather = sum(weather_delay, na.rm=TRUE),
+    NAS = sum(nas_delay, na.rm=TRUE),
+    Security = sum(security_delay, na.rm=TRUE),
+    Late_Aircraft = sum(late_aircraft_delay, na.rm=TRUE)
+  ) %>%
+  pivot_longer(everything(), names_to="Cause", values_to="Minutes")
+
+ggplot(causes, aes(x = reorder(Cause, Minutes), y = Minutes, fill=Cause)) +
+  geom_col() + coord_flip() +
+  labs(title = "Répartition des Minutes de Retard", x = "", y = "") +
+  theme_minimal() + theme(legend.position="none")
+```
+
+## 5. Effet Domino (Cascade)
+
+> **Q : Les retards s'accumulent-ils ?**
+
+- Le "Late Aircraft Delay" mesure l'impact des rotations précédentes.
+
+```{webr-r}
+#| fig-height: 4
+# Correlation between Late Aircraft and Total Delay
+ggplot(df, aes(x = late_aircraft_delay/arr_flights, y = arr_delay/arr_flights)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm", color = "red") +
+  labs(title = "Effet Cascade : Late Aircraft vs Total Delay", x = "Retard Avions Précédents (moy)", y = "Retard Total (moy)") +
+  theme_minimal()
+```
+
+## Synthèse et Recommandations
+
+- **Constat** : Forte hétérogénéité entre compagnies, pics estivaux marqués.
+- **Leurre** : La météo est un facteur mineur par rapport aux causes opérationnelles (Carrier + Late Aircraft).
+- **Levier** : Agir sur les "Carrier Delays" pour réduire l'amorçage de l'effet cascade.
